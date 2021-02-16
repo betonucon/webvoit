@@ -235,11 +235,37 @@
            });
             
         }
+        function hidupkan(a){
+           
+           $.ajax({
+               type: 'GET',
+               url: "{{url('pemilihan/hidupkan')}}",
+               data: "id="+a,
+               success: function(msg){
+                   location.reload();
+                   
+               }
+           });
+            
+        }
         function non_aktif(a){
            
            $.ajax({
                type: 'GET',
                url: "{{url('pemilihan/non_aktif')}}",
+               data: "id="+a,
+               success: function(msg){
+                   location.reload();
+                   
+               }
+           });
+            
+        }
+        function matikan(a){
+           
+           $.ajax({
+               type: 'GET',
+               url: "{{url('pemilihan/matikan')}}",
                data: "id="+a,
                success: function(msg){
                    location.reload();

@@ -26,4 +26,6 @@ class HomeController extends Controller
         $menu='Home';
         return view('home',compact('menu'));
     }
+
+    
 }

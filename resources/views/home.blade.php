@@ -7,21 +7,7 @@
           
           
             @if(cek_pemilihan_aktif()>0)
-              @foreach(pemilihan_aktif() as $no=>$det)
-                <div class="colom-25">
-                    <div class="nomor_user">
-                      NO {{$no+1}}
-                    </div>
-                    <div class="img_user">
-                        <img src="{{url('profil/'.cek_pengguna($det['nik'])['foto'])}}" onclick="pilih({{$no}})" class="imgnya" alt="User Image">
-                        <div class="centered"><span class="btn btn-primary btn-sm">Klik Area Foto</span></div>
-                    </div>
-                    <div class="nama_user">
-                      {{cek_pengguna($det['nik'])['name']}}<br>
-                      {{$det['nik']}}
-                    </div>
-                </div>
-              @endforeach
+              <div id="tampilkan_paslon" style="width:100%"></div>
             @endif
           
         </div>
@@ -54,5 +40,22 @@
       function pilih(a){
         $('#modalpilih').modal('show');
       }
+
+      $(document).ready(function() {
+            $.ajax({
+               type: 'GET',
+               url: "{{url('view_data_homenya')}}",
+               data: "id=id",
+               beforeSend: function(){
+                    $("#tampilkan_paslon").html('<center> Proses Data.............</center>');
+               },
+               success: function(msg){
+                    $("#tampilkan_paslon").html(msg);
+                  
+               }
+           });
+            
+
+      });
   </script>
 @endpush

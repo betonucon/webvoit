@@ -110,6 +110,7 @@
       }
       .centered {
         position: absolute;
+        display:none;
         top: 80%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -248,7 +249,7 @@
     <!-- /.container -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+  <footer class="main-footer" style="display:none">
     <div class="container">
       <div class="pull-right hidden-xs">
         <b>Version</b> 2.4.18

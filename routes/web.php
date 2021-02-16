@@ -14,6 +14,10 @@
 
 
 Route::group(['middleware'    => 'auth'],function(){
+    Route::get('/view_data_homenya','PemilihanController@view_data_vote');
+});
+Route::group(['middleware'    => 'auth'],function(){
+    
     Route::get('/pengguna','PenggunaController@index');
     Route::get('/pengguna/hapus','PenggunaController@hapus');
     Route::get('/pengguna/ubah','PenggunaController@ubah');
@@ -58,6 +62,8 @@ Route::group(['middleware'    => 'auth'],function(){
     Route::get('/pemilihan/tambah_paslon','PemilihanController@tambah_paslon');
     Route::get('/pemilihan/aktif','PemilihanController@aktif');
     Route::get('/pemilihan/non_aktif','PemilihanController@non_aktif');
+    Route::get('/pemilihan/hidupkan','PemilihanController@hidupkan');
+    Route::get('/pemilihan/matikan','PemilihanController@matikan');
 });
 
 Route::group(['middleware'    => 'auth'],function(){

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Pemilihan;
 use App\User;
 use App\Unit;
+
 use App\Detailpemilihan;
 class PemilihanController extends Controller
 {
@@ -31,12 +32,64 @@ class PemilihanController extends Controller
         $data      =Pemilihan::find($request->id);
         $data->sts  =1;
         $data->save();
+
+        $det=Pemilihan::where('id','!=',$request->id)->update([
+            'sts' => '0',
+        ]);
         
+    }
+    public function hidupkan(request $request){
+        $data      =Pemilihan::where('id',$request->id)->where('sts',1)->first();
+        $data->mulai  =1;
+        $data->save();
+
+        $det=Pemilihan::where('id','!=',$request->id)->update([
+            'mulai' => '0',
+        ]);
+        
+    }
+
+    public function view_data_vote(request $request){
+        error_reporting(0);
+       
+        $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
+        $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->whereIn('kode_unit',groupnya())->get();
+        foreach($data as $no=>$det){
+            echo'
+                <div class="colom-25">
+                    <div class="nomor_user">
+                      NO '.($no+1).' 
+                    </div>
+                    <div class="img_user">';
+                        if($det->pemilihan['mulai']==1){
+                            echo' <a href="#"><img src="'.url('profil/'.cek_pengguna($det['nik'])['foto']).'" onclick="pilih('.$no.')" class="imgnya" alt="User Image"></a>';
+                        
+                        }else{
+                            echo'<img src="'.url('profil/'.cek_pengguna($det['nik'])['foto']).'"  class="imgnya" alt="User Image">';
+                        
+                        }
+                        echo'
+                        <div class="centered"><span class="btn btn-primary btn-sm">Klik Area Foto</span></div>
+                    </div>
+                    <div class="nama_user">
+                      '.cek_pengguna($det['nik'])['name'].'<br>
+                      '.$det['nik'].'
+                    </div>
+                </div>';
+        }
     }
     public function non_aktif(request $request){
         $data      =Pemilihan::find($request->id);
         $data->sts  =0;
         $data->save();
+        
+        
+    }
+    public function matikan(request $request){
+        $data      =Pemilihan::find($request->id);
+        $data->mulai  =0;
+        $data->save();
+        
         
     }
     public function ubah(request $request){
@@ -90,6 +143,7 @@ class PemilihanController extends Controller
                     <th width="27%">Nama Pemilihan</th>
                     <th>Calon</th>
                     <th width="6%">Tambah</th>
+                    <th width="6%">Aktif</th>
                     <th width="6%">Status</th>
                     <th width="8%"></th>
                 </tr>
@@ -115,6 +169,15 @@ class PemilihanController extends Controller
                             echo'<span class="btn btn-default btn-xs" onclick="aktif('.$o['id'].')"><i class="fa fa-remove"></i> Off</span>';
                         }else{
                             echo'<span class="btn btn-success btn-xs" onclick="non_aktif('.$o['id'].')"><i class="fa fa-check"></i> Aktif</span>';
+                        }
+                        echo'
+                        
+                    </td>
+                    <td>';
+                        if($o['mulai']==0){
+                            echo'<span class="btn btn-default btn-xs" onclick="hidupkan('.$o['id'].')"><i class="fa fa-remove"></i> Stop</span>';
+                        }else{
+                            echo'<span class="btn btn-success btn-xs" onclick="matikan('.$o['id'].')"><i class="fa fa-check"></i> Running</span>';
                         }
                         echo'
                         
@@ -201,6 +264,7 @@ class PemilihanController extends Controller
                 $data           = New Pemilihan;
                 $data->name     = $request->name;
                 $data->sts     = 0;
+                $data->mulai     = 0;
                 $data->save();
 
                 if($data){
@@ -244,6 +308,7 @@ class PemilihanController extends Controller
             
                 $data           = Pemilihan::find($request->id);
                 $data->name     = $request->name;
+                $data->mulai     = 0;
                 $data->save();
 
                 if($data){
