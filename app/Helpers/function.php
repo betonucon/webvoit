@@ -47,10 +47,29 @@ function cek_pengguna($nik){
 
     return $data;
 }
+function kode_unit(){
+    $data=App\Pengguna::where('nik',Auth::user()['username'])->first();
 
+    return $data['kode_unit'];
+}
+function groupnya(){
+    $dat=App\Detailgroup::where('kode_unit',kode_unit())->orderBy('id','desc')->firstOrFail();
+    $data  = array_column(
+        App\Detailgroup::where('kode_group',$dat['kode_group'])->get()
+        ->toArray(),'kode_unit'
+    );
+
+    return $data;
+}
+
+function title(){
+    $data=App\Title::orderBy('id','desc')->firstOrFail();
+
+    return $data;
+}
 function pemilihan_aktif(){
     $cek=App\Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
-    $data=App\Detailpemilihan::where('pemilihan_id',$cek['id'])->get();
+    $data=App\Detailpemilihan::where('pemilihan_id',$cek['id'])->whereIn('kode_unit',groupnya())->get();
 
     return $data;
 }

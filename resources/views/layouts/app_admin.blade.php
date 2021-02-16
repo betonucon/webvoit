@@ -28,6 +28,9 @@
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{{url(link_html().'/dist/css/skins/_all-skins.min.css')}}">
   <style>
+    #wraper{
+      background-image: linear-gradient(to right top, #94a4bc, #7389b9, #5c6db2, #504ea7, #4f2996);
+    }
     @media only screen and (min-width: 650px) {
       .colom-25{
         width:18%;
@@ -44,10 +47,38 @@
       }
       .kepala{
         width:100%;
-        height:80px;
-        background:#2c1e67;
+        background:#fff;
         border-bottom:solid 1px #7f7c7c;
-        padding:1%;
+        padding-left:2%;
+        padding-right:2%;
+        padding-top:1%;
+        padding-bottom:1%;
+        display: flow-root;
+        
+      }
+      .img-kiri{
+        width:10%;
+        float:left;
+        height:80px;
+        display: flex;
+
+      }
+      .img-tengah{
+        width:80%;
+        float:left;
+        height:80px;
+        display:flow-root;
+        text-align:center;
+        padding-left:1%;
+        padding-right:1%;
+        font-size:22px;
+        font-weight:bold;
+      }
+      .img-kanan{
+        width:10%;
+        float:left;
+        height:80px;
+        display: flex;
       }
       .imgnya{
         width:99%;
@@ -142,16 +173,26 @@
 <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
 <body class="hold-transition skin-blue layout-top-nav">
 <div class="wrapper">
-<div class="kepala">
-      <img src="{{url('img/logo.png')}}" style="width:20%">
+  <div class="kepala">
+    <div class="img-kiri">
+      <img src="{{url('img/logo_skks.png')}}" style="width:100%">
     </div>
+    <div class="img-tengah">
+      {{title()['name']}}<br>
+      {{title()['periode']}}
+    </div>
+    <div class="img-kanan">
+      <img src="{{url('img/logo_ks.png')}}" style="width:100%">
+    </div>
+      
+  </div>
   <header class="main-header">
     
     <nav class="navbar navbar-static-top" style="background:#2c1e67">
     
       <div class="container">
         <div class="navbar-header">
-          <a href="../../index2.html" class="navbar-brand"><b>Admin</b>LTE</a>
+          <a href="../../index2.html" class="navbar-brand"><i class="fa fa-circle-o-notch fa-spin"></i> <b>S</b>KK<b>S</b></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
@@ -168,50 +209,14 @@
             
             <li class="dropdown user user-menu">
               <!-- Menu Toggle Button -->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <!-- The user image in the navbar-->
-                <img src="{{url('profil/'.foto_profil())}}" class="user-image" alt="User Image">
-                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs">{{Auth::user()['name']}}</span>
+              <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                <i class="fa fa-user"></i> 
+                <span class="hidden-xs">{{Auth::user()['name']}} | Logout</span>
+                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
               </a>
-              <ul class="dropdown-menu">
-                <!-- The user image in the menu -->
-                <li class="user-header">
-                  <img src="{{url('profil/'.foto_profil())}}" class="img-circle" alt="User Image">
-
-                  <p>
-                    {{Auth::user()['name']}}  
-                    <small>Member since Nov. 2012</small>
-                  </p>
-                </li>
-                <!-- Menu Body -->
-                <li class="user-body">
-                  <div class="row">
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Followers</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Sales</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Friends</a>
-                    </div>
-                  </div>
-                  <!-- /.row -->
-                </li>
-                <!-- Menu Footer-->
-                <li class="user-footer">
-                  <div class="pull-left">
-                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  </div>
-                  <div class="pull-right">
-                    <a href="#" class="btn btn-default btn-flat" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Sign out</a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                  </div>
-                </li>
-              </ul>
+              
             </li>
           </ul>
         </div>
@@ -221,21 +226,21 @@
     </nav>
   </header>
   <!-- Full Width Column -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" id="wraper">
     <div class="container">
       <!-- Content Header (Page header) -->
-      <section class="content-header" id="section">
-        <h1>
-          {{$menu}}
-          <small>Example 2.0</small>
-        </h1>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-          <li><a href="#">Layout</a></li>
-          <li class="active">{{$menu}}</li>
-        </ol>
-      </section>
-
+      @if($menu!='Home')
+        <section class="content-header" id="section" style="color:#fff">
+          <h1>
+            {{$menu}}
+            <small style="color:yellow">Example 2.0</small>
+          </h1>
+          <ol class="breadcrumb" >
+            <li><a href="#" style="color:#fff"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active" style="color:#fff">{{$menu}}</li>
+          </ol>
+        </section>
+      @endif
       <!-- Main content -->
       @yield('content')
       <!-- /.content -->

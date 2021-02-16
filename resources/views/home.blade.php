@@ -3,11 +3,9 @@
 @section('content')
     <section class="content" id="section">
         
-        <div class="box box-default">
-          <div class="box-header with-border">
-            <h3 class="box-title">Blank Box</h3>
-          </div>
-          <div class="box-body">
+        <div class="box" style="display:flex;background: none;border-top: none;box-shadow: none;">
+          
+          
             @if(cek_pemilihan_aktif()>0)
               @foreach(pemilihan_aktif() as $no=>$det)
                 <div class="colom-25">
@@ -25,7 +23,6 @@
                 </div>
               @endforeach
             @endif
-          </div>
           
         </div>
         

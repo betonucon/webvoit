@@ -27,6 +27,15 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
+    protected function credentials(\Illuminate\Http\Request $request)
+    {
+        if(is_numeric($request->get('email'))){
+            return ['username'=>$request->get('email'),'password'=>$request->get('password')];
+        }else{
+            return ['username' => $request->get('email'), 'password' =>$request->get('password')];
+        }
+        return $request->only($this->username(), 'password');
+    }
     /**
      * Create a new controller instance.
      *
