@@ -53,13 +53,9 @@ function kode_unit(){
     return $data['kode_unit'];
 }
 function groupnya(){
-    $dat=App\Detailgroup::where('kode_unit',kode_unit())->orderBy('id','desc')->firstOrFail();
-    $data  = array_column(
-        App\Detailgroup::where('kode_group',$dat['kode_group'])->get()
-        ->toArray(),'kode_unit'
-    );
-
-    return $data;
+    $dat=App\Detailgroup::where('nik',Auth::user()['username'])->first();
+    
+    return $data['kode_group'];
 }
 
 function title(){
@@ -97,8 +93,17 @@ function cek_unit($nik){
 }
 
 function unit(){
-    $data=App\Unit::orderBy('sts','Act')->get();
+    $data=App\Unit::orderBy('name','Asc')->get();
     return $data;
+}
+function cek_total($kode){
+    $data=App\Pengguna::where('kode_unit',$kode)->count();
+    return $data;
+}
+function cek_groupnya($kode_group){
+    $data=App\Group::where('kode_group',$kode_group)->first();
+    
+    return $data['name'];
 }
 
 

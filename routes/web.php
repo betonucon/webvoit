@@ -15,6 +15,7 @@
 
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/view_data_homenya','PemilihanController@view_data_vote');
+    Route::get('/view_data_homenya_admin','PemilihanController@view_data_vote_admin');
 });
 Route::group(['middleware'    => 'auth'],function(){
     
@@ -40,11 +41,15 @@ Route::group(['middleware'    => 'auth'],function(){
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/group','GroupController@index');
     Route::get('/group/hapus','GroupController@hapus');
+    Route::get('/group/hapus_pengguna','GroupController@hapus_pengguna');
+    Route::get('/group/pengguna','GroupController@pengguna');
     Route::get('/group/ubah','GroupController@ubah');
     Route::post('/group/simpan','GroupController@simpan');
     Route::post('/group/simpan_ubah','GroupController@simpan_ubah');
+    Route::post('/group/simpan_pengguna','GroupController@simpan_pengguna');
     Route::get('/group/view_data','GroupController@view_data');
     Route::get('/group/view_data_unit','GroupController@view_data_unit');
+    Route::get('/group/view_data_pengguna','GroupController@view_data_pengguna');
     Route::get('/group/tambah_unit','GroupController@tambah_unit');
 });
 

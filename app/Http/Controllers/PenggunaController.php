@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Pengguna;
+use App\Detailgroup;
 use App\User;
 class PenggunaController extends Controller
 {
@@ -18,6 +19,7 @@ class PenggunaController extends Controller
         $data=Pengguna::where('id',$request->id)->first();
         $hapus=Pengguna::where('id',$request->id)->delete();
         $hapususer=User::where('username',$data['nik'])->delete();
+        $detail=Detailgroup::where('nik',$data['nik'])->delete();
 
     }
     public function ubah(request $request){
@@ -29,11 +31,11 @@ class PenggunaController extends Controller
                 <input type="text" name="name" class="form-control" value="'.$data['name'].'">
             </div>
             <div class="form-group">
-                <label>Foto Profil</label>';
+                <label>Foto Profil</label><br>';
                 if($data['foto']==''){
                     echo'<input type="file" name="file" class="form-control"  placeholder="Isi disini">';
                 }else{
-                    echo'<img src="profil/'.$data['foto'].'" class="gambar-news">
+                    echo'<img src="profil/'.$data['foto'].'" class="gambar-news"><br>
                     <span class="btn btn-danger btn-xs" onclick="hapus_gambar('.$data['id'].')"><i class="fa fa-remove"></i> Hapus</span>';
                 }echo'
                 
@@ -52,7 +54,12 @@ class PenggunaController extends Controller
         ';
     }
     public function view_data(request $request){
-        $data=Pengguna::orderBy('name','Asc')->get();
+        $cek=strlen($request->text);
+        if($cek>0){
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->text.'%')->orWhere('name','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->paginate(200);
+        }else{
+            $data=Pengguna::with(['detailgroup'])->orderBy('name','Asc')->paginate(200);
+        }
         echo'
             <style>
                 th{
@@ -65,8 +72,8 @@ class PenggunaController extends Controller
                     <th width="5%">No</th>
                     <th width="10%">NIK</th>
                     <th>Nama</th>
-                    <th width="20%">Email</th>
-                    <th>Unit Kerja</th>
+                    <th>Area Kerja</th>
+                    <th>Unit SKKS</th>
                     <th width="8%"></th>
                 </tr>
 
@@ -78,8 +85,9 @@ class PenggunaController extends Controller
                     <td>'.($no+1).'</td>
                     <td>'.$o['nik'].'</td>
                     <td>'.$o['name'].'</td>
-                    <td>'.cek_user($o['nik'])['email'].'</td>
                     <td>'.cek_unit($o['kode_unit']).'</td>
+                    <td>'.cek_groupnya($o->detailgroup['kode_group']).'</td>
+                    
                     <td>
                         <span class="btn btn-success btn-xs" onclick="ubah('.$o['id'].')"><i class="fa fa-pencil"></i></span>_
                         <span class="btn btn-danger btn-xs" onclick="hapus('.$o['id'].')"><i class="fa fa-remove"></i></span>
@@ -96,7 +104,6 @@ class PenggunaController extends Controller
         
         if (trim($request->nik) == '') {$error[] = '- Isi NIK terlebih dahulu';}
         if (trim($request->name) == '') {$error[] = '-Isi Nama terlebih dahulu';}
-        if (trim($request->email) == '') {$error[] = '- Isi Email terlebih dahulu';}
         if (trim($request->kode_unit) == '') {$error[] = '- Pilih Unit Kerja terlebih dahulu';}
         if (trim($request->file) == '') {$error[] = '- Upload Foto Profil terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
@@ -105,6 +112,7 @@ class PenggunaController extends Controller
             if($cek>0){
                 echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> Nik atau Email sudah terdaftar</p>';
             }else{
+                $patr='/\s+/';
                 $file=$_FILES['file']['name'];
                 $size=$_FILES['file']['size'];
                 $asli=$_FILES['file']['tmp_name'];
@@ -112,13 +120,14 @@ class PenggunaController extends Controller
                 $tipe=explode('/',$_FILES['file']['type']);
                 $filename=$request->nik.'.'.$tipe[1];
                 $lokasi='profil/';
+                $email=preg_replace($patr,'.',$request->name);
                 if($tipe[0]=='image' && $size<=198640){
                     if(move_uploaded_file($asli, $lokasi.$filename)){
                         $data           = New User;
                         $data->name     = $request->name;
                         $data->username = $request->nik;
-                        $data->email    = $request->email;
-                        $data->role_id    = 1;
+                        $data->email    = $email;
+                        $data->role_id    = 2;
                         $data->password = Hash::make($request->nik);
                         $data->save();
 

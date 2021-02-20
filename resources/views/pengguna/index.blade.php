@@ -1,4 +1,4 @@
-@extends('layouts.app_admin')
+@extends('layouts.app_admin_kanan')
 
 @section('content')
     <section class="content" id="section">
@@ -12,7 +12,13 @@
             <span class="btn btn-success btn-sm">Upload Excel</span>
           </div>
           <div class="box-body">
-              
+              <div class="form-group">
+                  <div class="col-sm-6">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" onkeyup="cari(this.value)" placeholder="Cari Pengguna">
+                  </div>
+              </div><br>
               <div id="tabeldata">
 
               </div>
@@ -41,10 +47,6 @@
                     <div class="form-group" style="margin-bottom: 0px;">
                         <label>Nama Pengguna</label>
                         <input type="text" name="name" class="form-control">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0px;">
-                        <label>Email</label>
-                        <input type="text" name="email" class="form-control">
                     </div>
                     <div class="form-group" style="margin-bottom: 0px;">
                         <label>Foto Profil</label>
@@ -119,6 +121,23 @@
             
 
         });
+
+        function cari(a){
+           
+          $.ajax({
+               type: 'GET',
+               url: "{{url('pengguna/view_data')}}?text="+a,
+               data: "id=id",
+               beforeSend: function(){
+                    $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
+               },
+               success: function(msg){
+                    $("#tabeldata").html(msg);
+                  
+               }
+           });
+             
+         }
 
         function tambah(){
             $('#modaltambah').modal('show');

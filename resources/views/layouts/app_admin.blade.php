@@ -32,6 +32,7 @@
       background-image: linear-gradient(to right top, #94a4bc, #7389b9, #5c6db2, #504ea7, #4f2996);
     }
     @media only screen and (min-width: 650px) {
+      
       .colom-25{
         width:18%;
         float:left;
@@ -234,7 +235,7 @@
         <section class="content-header" id="section" style="color:#fff">
           <h1>
             {{$menu}}
-            <small style="color:yellow">Example 2.0</small>
+            <small style="color:yellow">SKKS (Serikat Karyawan Krakatau Steel)</small>
           </h1>
           <ol class="breadcrumb" >
             <li><a href="#" style="color:#fff"><i class="fa fa-dashboard"></i> Home</a></li>

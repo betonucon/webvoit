@@ -1,18 +1,24 @@
-@extends('layouts.app_admin')
+@extends('layouts.app_admin_kanan')
 
 @section('content')
     <section class="content" id="section">
         
         <div class="box box-default">
-          <div class="box-header with-border">
+          <!-- <div class="box-header with-border">
             <h3 class="box-title">Blank Box</h3>
-          </div>
+          </div> -->
           <div class="box-header with-border">
             <span class="btn btn-primary btn-sm" onclick="tambah()">Tambah</span>
             <span class="btn btn-success btn-sm">Upload Excel</span>
           </div>
           <div class="box-body">
-              
+              <div class="form-group">
+                  <div class="col-sm-6">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" onkeyup="cari(this.value)" placeholder="Cari Nama Unit">
+                  </div>
+              </div>
               <div id="tabeldata">
 
               </div>
@@ -128,6 +134,22 @@
             $('#modaltambah').modal('show');
         }
         
+        function cari(a){
+           
+          $.ajax({
+               type: 'GET',
+               url: "{{url('unit/view_data')}}?text="+a,
+               data: "id=id",
+               beforeSend: function(){
+                    $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
+               },
+               success: function(msg){
+                    $("#tabeldata").html(msg);
+                  
+               }
+           });
+            
+        }
         function ubah(a){
            
            $.ajax({

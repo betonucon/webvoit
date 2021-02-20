@@ -53,7 +53,7 @@ class PemilihanController extends Controller
         error_reporting(0);
        
         $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
-        $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->whereIn('kode_unit',groupnya())->get();
+        $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->whereIn('kode_group',groupnya())->get();
         foreach($data as $no=>$det){
             echo'
                 <div class="colom-25">
@@ -70,6 +70,35 @@ class PemilihanController extends Controller
                         }
                         echo'
                         <div class="centered"><span class="btn btn-primary btn-sm">Klik Area Foto</span></div>
+                    </div>
+                    <div class="nama_user">
+                      '.cek_pengguna($det['nik'])['name'].'<br>
+                      '.$det['nik'].'
+                    </div>
+                </div>';
+        }
+    }
+    public function view_data_vote_admin(request $request){
+        error_reporting(0);
+       
+        $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
+        $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
+        foreach($data as $no=>$det){
+            echo'
+                <div class="colom-25">
+                    <div class="nomor_user">
+                      NO '.($no+1).' 
+                    </div>
+                    <div class="img_user">';
+                        if($det->pemilihan['mulai']==1){
+                            echo' <a href="#"><img src="'.url('profil/'.cek_pengguna($det['nik'])['foto']).'" onclick="pilih('.$no.')" class="imgnya" alt="User Image"></a>';
+                            echo'<div class="centered"><span class="btn btn-primary btn-sm">Klik Area Foto</span></div>';
+                        }else{
+                            echo'<img src="'.url('profil/'.cek_pengguna($det['nik'])['foto']).'"  class="imgnya" alt="User Image">';
+                        
+                        }
+                        echo'
+                        
                     </div>
                     <div class="nama_user">
                       '.cek_pengguna($det['nik'])['name'].'<br>
@@ -101,6 +130,21 @@ class PemilihanController extends Controller
                 <input type="hidden" name="id" class="form-control" value="'.$data['id'].'">
                 
             </div>
+            <div class="form-group">
+                <label>Periode:</label>
+                <div class="input-group">
+                <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" name="periode" class="form-control" value="'.$data['periode'].'" id="periode_ubah">
+                </div>
+            </div>
+            <script>
+                $(document).ready(function(){
+                    $("#birth-date").mask("00/00/0000");
+                    $("#periode_ubah").mask("0000-0000");
+                });
+            </script>
         ';
     }
 
@@ -141,6 +185,7 @@ class PemilihanController extends Controller
                 <tr>
                     <th width="5%">No</th>
                     <th width="27%">Nama Pemilihan</th>
+                    <th width="10%">Periode</th>
                     <th>Calon</th>
                     <th width="6%">Tambah</th>
                     <th width="6%">Aktif</th>
@@ -156,6 +201,7 @@ class PemilihanController extends Controller
                 <tr>
                     <td>'.($no+1).'</td>
                     <td>'.$o['name'].'</td>
+                    <td>'.$o['periode'].'</td>
                     <td>';
                         foreach($detail as $no=>$det){
                             if(($no+1)%2==0){$color='success';}else{$color='primary';}
@@ -255,14 +301,16 @@ class PemilihanController extends Controller
     public function simpan(request $request){
         
         if (trim($request->name) == '') {$error[] = '-Isi Nama Pemilihan terlebih dahulu';}
+        if (trim($request->periode) == '') {$error[] = '-Isi Periode terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
-            $cek=Pemilihan::where('name',$request->name)->count();
+            $cek=Pemilihan::where('name',$request->name)->where('periode',$request->periode)->count();
             if($cek>0){
                 echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> Nama pemilihan sudah terdaftar</p>';
             }else{
                 $data           = New Pemilihan;
                 $data->name     = $request->name;
+                $data->periode     = $request->periode;
                 $data->sts     = 0;
                 $data->mulai     = 0;
                 $data->save();
@@ -289,7 +337,7 @@ class PemilihanController extends Controller
                 $data                   = New Detailpemilihan;
                 $data->pemilihan_id     = $request->pemilihan_id;
                 $data->nik              = $request->nik;
-                $data->kode_unit        = cek_pengguna($request->nik)['kode_unit'];
+                $data->kode_group        = cek_pengguna($request->nik)->detailgroup['kode_group'];
                 $data->save();
 
                 if($data){
@@ -308,6 +356,7 @@ class PemilihanController extends Controller
             
                 $data           = Pemilihan::find($request->id);
                 $data->name     = $request->name;
+                $data->periode     = $request->periode;
                 $data->mulai     = 0;
                 $data->save();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,7 +25,13 @@ class HomeController extends Controller
     public function index()
     {
         $menu='Home';
-        return view('home',compact('menu'));
+        if(Auth::user()['role_id']==1){
+            return view('home_admin',compact('menu'));
+        }
+        if(Auth::user()['role_id']==2){
+            return view('home',compact('menu'));
+        }
+        
     }
 
     

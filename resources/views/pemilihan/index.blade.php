@@ -1,4 +1,4 @@
-@extends('layouts.app_admin')
+@extends('layouts.app_admin_kanan')
 
 @section('content')
     <section class="content" id="section">
@@ -34,8 +34,17 @@
                 <form method="post" id="mydata" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group" style="margin-bottom: 0px;">
-                        <label>Nama Pemilihan</label>
+                        <label>Nama E-vote</label>
                         <input type="text" name="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label>Periode:</label>
+                      <div class="input-group">
+                        <div class="input-group-addon">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                        <input type="text" name="periode" class="form-control" id="periode">
+                      </div>
                     </div>
                     
                     
@@ -157,6 +166,7 @@
                }
            });
         }
+        
         
         function ubah(a){
            

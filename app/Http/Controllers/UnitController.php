@@ -10,7 +10,7 @@ use App\Unit;
 class UnitController extends Controller
 {
     public function index(request $request){
-        $menu='Unit Kerja';
+        $menu='Unit SKKS';
 
         return view('unit.index',compact('menu'));
     }
@@ -20,7 +20,7 @@ class UnitController extends Controller
 
     }
     public function cari_nik(request $request){
-        $data=Pengguna::where('nik','LIKE','%'.$request->id.'%')->first();
+        $data=Pengguna::where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();
         echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
 
     }
@@ -47,7 +47,13 @@ class UnitController extends Controller
     }
     
     public function view_data(request $request){
-        $data=Unit::orderBy('name','Asc')->get();
+        $cek=strlen($request->text);
+        if($cek>0){
+            $data=Unit::where('kode_unit','LIKE','%'.$request->text.'%')->orWhere('name','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->paginate(200);
+        }else{
+            $data=Unit::orderBy('name','Asc')->paginate(200);
+        }
+        
         echo'
             <style>
                 th{
@@ -60,7 +66,7 @@ class UnitController extends Controller
                     <th width="5%">No</th>
                     <th width="10%">Kode Unit</th>
                     <th>Nama</th>
-                    <th width="20%">Keterangan</th>
+                    <th width="16%">Tot Pegawai</th>
                     <th width="8%"></th>
                 </tr>
 
@@ -72,7 +78,7 @@ class UnitController extends Controller
                     <td>'.($no+1).'</td>
                     <td>'.$o['kode_unit'].'</td>
                     <td>'.cek_kategori($o['sts']).' '.$o['name'].'</td>
-                    <td></td>
+                    <td>'.cek_total($o['kode_unit']).'</td>
                     <td>
                         <span class="btn btn-success btn-xs" onclick="ubah('.$o['id'].')"><i class="fa fa-pencil"></i></span>_
                         <span class="btn btn-danger btn-xs" onclick="hapus('.$o['id'].')"><i class="fa fa-remove"></i></span>

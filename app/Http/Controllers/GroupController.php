@@ -16,9 +16,18 @@ class GroupController extends Controller
 
         return view('group.index',compact('menu'));
     }
+    public function pengguna(request $request){
+        $menu='Pengguna Group';
+        $kode_group=$request->kode_group;
+        return view('group.pengguna',compact('menu','kode_group'));
+    }
     
     public function hapus(request $request){
         $hapus=Group::where('id',$request->id)->delete();
+        
+    }
+    public function hapus_pengguna(request $request){
+        $hapus=Detailgroup::where('id',$request->id)->delete();
         
     }
     public function ubah(request $request){
@@ -30,6 +39,51 @@ class GroupController extends Controller
                 <input type="text" name="name" class="form-control" value="'.$data['name'].'">
             </div>
         ';
+    }
+
+    public function view_data_pengguna(request $request){
+        $data=Detailgroup::where('kode_group',$request->kode_group)->get();
+        echo'
+            <style>
+                th{
+                   background:#d1d1dc;
+                   text-align:center;
+                   font-size:12px;
+                   padding:0.3%;
+                   border:solid 1px #dccdcd;
+                }
+                .ttd{
+                   font-size:12px;
+                   padding:0.3%;
+                   border:solid 1px #dccdcd;
+                }
+            </style>
+            <table width="100%" class="table-hover dataTable">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="10%">NIK</th>
+                    <th>Nama</th>
+                    <th width="4%"></th>
+                </tr>
+
+        ';
+
+        foreach($data as $no=>$o){
+            
+            echo'
+                <tr>
+                    <td class="ttd">'.($no+1).'</td>
+                    <td class="ttd">'.$o['nik'].'</td>
+                    <td class="ttd">'.cek_pengguna($o['nik'])['name'].' ['.cek_pengguna($o['nik'])['name'].']</td>
+                    <td class="ttd">
+                        <span class="btn btn-danger btn-xs" onclick="hapus('.$o['id'].')"><i class="fa fa-remove"></i></span>
+                    </td>
+                </tr>
+
+            ';
+        }
+
+        echo'</table>';
     }
 
     public function view_data(request $request){
@@ -46,7 +100,8 @@ class GroupController extends Controller
                     <th width="5%">No</th>
                     <th width="10%">Kode Group</th>
                     <th width="25%">Nama Group</th>
-                    <th>Unit Kerja</th>
+                    <th>Data Pengguna</th>
+                    <th width="5%"></th>
                     <th width="8%"></th>
                 </tr>
 
@@ -62,10 +117,11 @@ class GroupController extends Controller
                     <td>';
                         foreach($detail as $no=>$det){
                             if(($no+1)%2==0){$color='success';}else{$color='primary';}
-                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">'.cek_unit($det['kode_unit']).'</span>';
+                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
                         }
                     echo'
                     </td>
+                    <td><span class="btn btn-primary btn-xs" onclick="tambah_pengguna(`'.$o['kode_group'].'`)"><i class="fa fa-users"></i></span></td>
                     <td>
                         <span class="btn btn-success btn-xs" onclick="ubah('.$o['id'].')"><i class="fa fa-pencil"></i></span>_
                         <span class="btn btn-danger btn-xs" onclick="hapus('.$o['id'].')"><i class="fa fa-remove"></i></span>
@@ -131,10 +187,28 @@ class GroupController extends Controller
 
     public function tambah_unit(request $request){
         $data   = New Detailgroup;
-        $data->kode_unit = $request->unit;
+        $data->nik = $request->nik;
         $data->kode_group = $request->group;
         $data->save();
     }
+    public function simpan_pengguna(request $request){
+        if (trim($request->nik) == '') {$error[] = '- Pilih Pengguna terlebih dahulu';}
+        if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
+        else{
+            $cek=Detailgroup::where('nik',$request->nik)->count();
+            if($cek>0){
+                echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> Data pengguna sudah terdaftar diunit SKKS</p>';
+            }else{
+                $data   = New Detailgroup;
+                $data->nik = $request->nik;
+                $data->kode_group = $request->kode_group;
+                $data->save();
+
+                echo'ok';
+            }
+        }
+    }
+
     public function simpan(request $request){
         
         if (trim($request->kode_group) == '') {$error[] = '- Isi Kode Group terlebih dahulu';}

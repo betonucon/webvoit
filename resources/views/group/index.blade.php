@@ -1,4 +1,4 @@
-@extends('layouts.app_admin')
+@extends('layouts.app_admin_kanan')
 
 @section('content')
     <section class="content" id="section">
@@ -93,6 +93,42 @@
       </div>
       
     </div>
+
+    <div class="modal fade" id="modalpaslon">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" onclick="tutup()">
+              <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">Tambah Data Paslon</h4>
+          </div>
+          <div class="modal-body" style="display: flow-root;">
+                <div id="notifikasipaslon"></div>
+                <form method="post" id="mydata_paslon" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="pemilihan_id" id="pemilihan_id">
+                    <div class="form-group" style="margin-bottom:0px">
+                      <label >NIK</label>
+                      <input type="text" style="width:20%" id="text" class="form-control" onkeyup="cari_nik(this.value)"  placeholder="Masukan NIK">
+                      <input type="hidden" style="width:20%" class="form-control" id="nik" name="nik" placeholder="Masukan NIK">
+                      
+                    </div>
+                    <div class="form-group" style="margin-bottom:0px">
+                      <label>Nama</label>
+                      <input type="text" class="form-control" id="nama" >
+                    </div>
+                    
+                </form><br>
+                <span  class="btn btn-primary btn-sm" id="simpan_data_paslon" onclick="simpan_data_paslon()">Simpan</span>
+                <span  class="btn btn-dafeult btn-sm" id="simpan_data_paslon_proses">Proses....</span>
+                <hr style="border-top: 1px solid #e8d7d7;">
+                <div id="tampilpaslon" style="padding:1%"></div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
 @endsection
 
 @push('ajax')
@@ -135,6 +171,10 @@
             
 
         });
+
+        function tambah_pengguna(a){
+            location.assign("{{url('group/pengguna')}}?kode_group="+a);
+        }
 
         function tutup(){
           location.reload();
@@ -230,11 +270,7 @@
                       var data=msg.split('@');
                         if(data[0]=='ok'){
                           
-                          $('#kode_group_id').val(data[1]);
-                          $('#kedua').show();
-                          $('#awal_dua').show();
-                          $('#awal').hide();
-                          $('#awal_btn').hide();
+                          location.assign("{{url('group/pengguna')}}?kode_group="+data[1]);
                                
                         }else{
                             $("#simpan_data_proses").hide()
