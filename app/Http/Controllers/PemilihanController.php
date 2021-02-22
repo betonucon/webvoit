@@ -17,6 +17,15 @@ class PemilihanController extends Controller
 
         return view('pemilihan.index',compact('menu'));
     }
+    public function index_unit(request $request){
+        $menu='Pemilihan';
+        if(Auth::user()['role_id']==3){
+            return view('pemilihan.index_unit',compact('menu'));
+        }else{
+
+        }
+        
+    }
     
     public function hapus(request $request){
         $hapus=Pemilihan::where('id',$request->id)->delete();
@@ -53,7 +62,16 @@ class PemilihanController extends Controller
         error_reporting(0);
        
         $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
-        $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->whereIn('kode_group',groupnya())->get();
+        if(Auth::user()['role_id']==3){
+            $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
+        }
+        if(Auth::user()['role_id']==2){
+            $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
+        }
+        if(Auth::user()['role_id']==1){
+            $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
+        }
+        
         foreach($data as $no=>$det){
             echo'
                 <div class="colom-25">
@@ -149,25 +167,48 @@ class PemilihanController extends Controller
     }
 
     public function view_data_paslon(request $request){
-        $data=Detailpemilihan::where('pemilihan_id',$request->id)->get();
+        if(Auth::user()['role_id']=='1'){
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->get();
+        }
+        if(Auth::user()['role_id']=='3'){
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->get();
+        }
+        
+        echo'
+            <style>
+                th{
+                   background:#d1d1dc;
+                   text-align:center;
+                   padding:4px;
+                   border:solid 1px #000;
+                }
+                td{
+                   padding:4px;
+                   border:solid 1px #000;
+                }
+            </style>
+            <table width="100%" class="table-bordered table-hover dataTable">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="10%">NIK</th>
+                    <th>Nama</th>
+                    <th>Area Kerja</th>
+                    <th width="8%"></th>
+                </tr>
+
+        ';
         foreach($data as $no=>$o){
             echo'
-                <div class="colom-25">
-                    <div class="nomor_user">
-                      Calon Ke '.($no+1).'
-                    </div>
-                    <div class="img_user">
-                        <img src="'.url('profil/'.cek_pengguna($o['nik'])['foto']).'" class="imgnya" alt="User Image">
-                        
-                    </div>
-                    <div class="nama_user">
-                        '.cek_pengguna($o['nik'])['name'].'
-                    </div>
-                    <div class="nama_user">
-                        <span class="btn btn-danger btn-xs" onclick="hapus_paslon(`'.$o['nik'].'`,'.$o['pemilihan_id'].')"><i class="fa fa-remove"></i> Hapus</span>
-                    </div>
-                </div>
-            
+                <tr>
+                    <td>'.($no+1).'</td>
+                    <td>'.$o['nik'].'</td>
+                    <td>'.$o['pengguna']['name'].'</td>
+                    <td>'.cek_unit($o->pengguna['kode_unit']).'</td>
+                    <td>
+                        <span class="btn btn-danger btn-xs" onclick="hapus_paslon(`'.$o['nik'].'`,'.$o['pemilihan_id'].')"><i class="fa fa-remove"></i></span>
+                    </td>
+                </tr>
+
             ';
         }
     }
@@ -232,6 +273,76 @@ class PemilihanController extends Controller
                         <span class="btn btn-success btn-xs" onclick="ubah('.$o['id'].')"><i class="fa fa-pencil"></i></span>_
                         <span class="btn btn-danger btn-xs" onclick="hapus('.$o['id'].')"><i class="fa fa-remove"></i></span>
                     </td>
+                </tr>
+
+            ';
+        }
+
+        echo'</table>';
+    }
+    public function view_data_perunit(request $request){
+        $data=Pemilihan::orderBy('name','Asc')->get();
+        echo'
+            <style>
+                th{
+                   background:#d1d1dc;
+                   text-align:center;
+                }
+            </style>
+            <table width="100%" class="table table-bordered table-hover dataTable">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="27%">Nama Pemilihan</th>
+                    <th width="10%">Periode</th>
+                    <th>Calon</th>
+                    <th width="6%">Tambah</th>
+                    <th width="6%">Aktif</th>
+                    <th width="6%">Status</th>
+                </tr>
+
+        ';
+
+        foreach($data as $no=>$o){
+            if(Auth::user()['role_id']==1){
+                $detail=Detailpemilihan::where('pemilihan_id',$o['id'])->get();
+            }
+            if(Auth::user()['role_id']==3){
+                
+                $detail=Detailpemilihan::where('pemilihan_id',$o['id'])->where('kode_group',cek_kode_group())->get();
+            }
+            
+            echo'
+                <tr>
+                    <td>'.($no+1).'</td>
+                    <td>'.$o['name'].'</td>
+                    <td>'.$o['periode'].'</td>
+                    <td>';
+                        foreach($detail as $no=>$det){
+                            if(($no+1)%2==0){$color='success';}else{$color='primary';}
+                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
+                        }
+                    echo'
+                    </td>
+                    <td><span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['id'].')"><i class="fa fa-users"></i></span></td>
+                    <td>';
+                        if($o['sts']==0){
+                            echo'<span class="btn btn-default btn-xs" ><i class="fa fa-remove"></i> Off</span>';
+                        }else{
+                            echo'<span class="btn btn-success btn-xs" ><i class="fa fa-check"></i> Aktif</span>';
+                        }
+                        echo'
+                        
+                    </td>
+                    <td>';
+                        if($o['mulai']==0){
+                            echo'<span class="btn btn-default btn-xs" ><i class="fa fa-remove"></i> Stop</span>';
+                        }else{
+                            echo'<span class="btn btn-success btn-xs" ><i class="fa fa-check"></i> Running</span>';
+                        }
+                        echo'
+                        
+                    </td>
+                    
                 </tr>
 
             ';

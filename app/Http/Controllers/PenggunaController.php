@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Pengguna;
 use App\Detailgroup;
 use App\User;
@@ -13,6 +14,15 @@ class PenggunaController extends Controller
         $menu='Pengguna';
 
         return view('pengguna.index',compact('menu'));
+    }
+    public function index_unit(request $request){
+        $menu='Pengguna '.cek_name_group();
+        if(Auth::user()['role_id']==3){
+            return view('pengguna.index_unit',compact('menu'));
+        }else{
+
+        }
+        
     }
     
     public function hapus(request $request){
@@ -49,6 +59,15 @@ class PenggunaController extends Controller
                         echo'<option value="'.$unit['kode_unit'].'" '.$cek.'>'.cek_kategori($unit['sts']).' '.$unit['name'].'</option>';
                     }
                     echo'
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0px;">
+                <label>Role</label>
+                <select name="role_id" class="form-control">
+                    <option value="">Pilih Role</option>
+                    <option value="3" '; if(cek_user($data['nik'])['role_id']==3){echo'selected';} echo'>Admin Unit SKKS dan User Voting</option>
+                    <option value="2" '; if(cek_user($data['nik'])['role_id']==2){echo'selected';} echo'>User Voting</option>
+                    
                 </select>
             </div>
         ';
@@ -99,6 +118,64 @@ class PenggunaController extends Controller
 
         echo'</table>';
     }
+    public function view_data_unit(request $request){
+        $cek=strlen($request->text);
+        if($cek>0){
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->text.'%')->orWhere('name','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->paginate(200);
+        }else{
+            $data=Pengguna::with(['detailgroup'])->orderBy('name','Asc')->paginate(200);
+        }
+        echo'
+            <style>
+                th{
+                   background:#d1d1dc;
+                   text-align:center;
+                }
+            </style>
+            <table width="100%" class="table table-bordered table-hover dataTable">
+                <tr>
+                    <th width="10%">NIK</th>
+                    <th>Nama</th>
+                    <th>Area Kerja</th>
+                    <th>Unit SKKS</th>
+                    <th width="4%"></th>
+                </tr>
+
+        ';
+
+        foreach($data as $no=>$o){
+            if($o['detailgroup']['kode_group']==cek_kode_group() && $o['detailgroup']['kode_group']!=''){
+            echo'
+                <tr>
+                    <td>'.$o['nik'].'</td>
+                    <td>'.$o['name'].'</td>
+                    <td>'.cek_unit($o['kode_unit']).'</td>
+                    <td>'.cek_groupnya($o['detailgroup']['kode_group']).'</td>';
+                    if(Auth::user()['username']==$o['nik']){
+                        echo'
+                        <td>
+                            <span class="btn btn-default btn-xs" ><i class="fa fa-remove"></i></span>
+                        </td>
+                        ';
+                    }else{
+                        echo'
+                        <td>
+                            <span class="btn btn-danger btn-xs" onclick="hapus('.$o['detailgroup']['id'].')"><i class="fa fa-remove"></i></span>
+                        </td>
+                        ';
+                    }
+                    echo'
+                    
+                </tr>
+
+            ';
+            }else{
+                
+            }
+        }
+
+        echo'</table>';
+    }
 
     public function simpan(request $request){
         
@@ -106,6 +183,7 @@ class PenggunaController extends Controller
         if (trim($request->name) == '') {$error[] = '-Isi Nama terlebih dahulu';}
         if (trim($request->kode_unit) == '') {$error[] = '- Pilih Unit Kerja terlebih dahulu';}
         if (trim($request->file) == '') {$error[] = '- Upload Foto Profil terlebih dahulu';}
+        if (trim($request->role_id) == '') {$error[] = '- Pilih role terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             $cek=User::where('username',$request->nik)->orWhere('email',$request->email)->count();
@@ -127,7 +205,7 @@ class PenggunaController extends Controller
                         $data->name     = $request->name;
                         $data->username = $request->nik;
                         $data->email    = $email;
-                        $data->role_id    = 2;
+                        $data->role_id    = $request->role_id;
                         $data->password = Hash::make($request->nik);
                         $data->save();
 
@@ -156,11 +234,13 @@ class PenggunaController extends Controller
         
         if (trim($request->name) == '') {$error[] = '-Isi Nama terlebih dahulu';}
         if (trim($request->kode_unit) == '') {$error[] = '- Pilih Unit Kerja terlebih dahulu';}
+        if (trim($request->role_id) == '') {$error[] = '- Pilih role terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             if($request->file==''){
                 $data           = User::where('username',$request->nik)->first();
                 $data->name     = $request->name;
+                $data->role_id     = $request->role_id;
                 $data->save();
 
                 if($data){

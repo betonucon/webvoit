@@ -47,6 +47,33 @@ function cek_pengguna($nik){
 
     return $data;
 }
+function cek_kode_group(){
+    if(Auth::user()['role_id']==3){
+        $data=App\Pengguna::where('nik',Auth::user()['username'])->first();
+        $kode=$data['detailgroup']['kode_group'];
+    }
+    
+    if(Auth::user()['role_id']==2){
+        $data=App\Pengguna::where('nik',Auth::user()['username'])->first();
+        $kode=$data['detailgroup']['kode_group'];
+    }
+    
+    if(Auth::user()['role_id']==1){
+        $kode='Admin';
+    }
+    
+    return $kode;
+}
+function cek_name_group(){
+    
+    if(Auth::user()['role_id']==3){
+        $data=App\Group::where('kode_group',cek_kode_group())->first();
+        $kode=$data['name'];
+    }else{
+        $kode='Admin';
+    }
+    return $kode;
+}
 function kode_unit(){
     $data=App\Pengguna::where('nik',Auth::user()['username'])->first();
 

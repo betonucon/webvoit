@@ -4,9 +4,9 @@
     <section class="content" id="section">
         
         <div class="box box-default">
-          <div class="box-header with-border">
+          <!-- <div class="box-header with-border">
             <h3 class="box-title">Blank Box</h3>
-          </div>
+          </div> -->
           <div class="box-header with-border">
             <span class="btn btn-primary btn-sm" onclick="tambah()">Tambah</span>
             <span class="btn btn-success btn-sm">Upload Excel</span>
@@ -16,9 +16,9 @@
                   <div class="col-sm-6">
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" class="form-control" onkeyup="cari(this.value)" placeholder="Cari Pengguna">
+                    <input type="text" class="form-control" onkeyup="cari(this.value)" placeholder="Cari Nama Unit">
                   </div>
-              </div><br>
+              </div>
               <div id="tabeldata">
 
               </div>
@@ -41,35 +41,34 @@
                 <form method="post" id="mydata" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group" style="margin-bottom: 0px;">
-                        <label>NIK</label>
-                        <input type="text" name="nik" class="form-control">
+                        <label>Kode Unit</label>
+                        <input type="text" name="kode_unit" class="form-control">
                     </div>
                     <div class="form-group" style="margin-bottom: 0px;">
-                        <label>Nama Pengguna</label>
+                        <label>Nama Unit</label>
                         <input type="text" name="name" class="form-control">
                     </div>
                     <div class="form-group" style="margin-bottom: 0px;">
-                        <label>Foto Profil</label>
-                        <input type="file" name="file" class="form-control">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0px;">
-                        <label>Unit Kerja</label>
-                        <select name="kode_unit" class="form-control">
-                           <option value="">Pilih Unit</option>
-                            @foreach(unit() as $unit)
-                              <option value="{{$unit['kode_unit']}}">{{cek_kategori($unit['sts'])}} {{$unit['name']}}</option>
+                        <label>Kategori</label>
+                        <select name="sts" class="form-control">
+                           <option value="">Pilih Kategori</option>
+                            @foreach(kategori() as $kat)
+                              <option value="{{$kat['id']}}">{{$kat['name']}}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" style="margin-bottom: 0px;">
-                        <label>Role</label>
-                        <select name="role_id" class="form-control">
-                           <option value="">Pilih Role</option>
-                           <option value="3">Admin Unit SKKS dan User Voting</option>
-                           <option value="2">User Voting</option>
-                           
+                    <!-- <div class="form-group">
+                        <label>Disabled Result</label>
+                        <select class="form-control" style="width: 100%;border-radius:0px">
+                            <option selected="selected">Alabama</option>
+                            <option>Alaska</option>
+                            <option disabled="disabled">California (disabled)</option>
+                            <option>Delaware</option>
+                            <option>Tennessee</option>
+                            <option>Texas</option>
+                            <option>Washington</option>
                         </select>
-                    </div>
+                    </div> -->
                     
                 </form>
           </div>
@@ -117,7 +116,7 @@
             $('#simpan_data_ubah_proses').hide();
             $.ajax({
                type: 'GET',
-               url: "{{url('pengguna/view_data')}}",
+               url: "{{url('unit/view_data')}}",
                data: "id=id",
                beforeSend: function(){
                     $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
@@ -131,11 +130,15 @@
 
         });
 
+        function tambah(){
+            $('#modaltambah').modal('show');
+        }
+        
         function cari(a){
            
           $.ajax({
                type: 'GET',
-               url: "{{url('pengguna/view_data')}}?text="+a,
+               url: "{{url('unit/view_data')}}?text="+a,
                data: "id=id",
                beforeSend: function(){
                     $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
@@ -145,18 +148,13 @@
                   
                }
            });
-             
-         }
-
-        function tambah(){
-            $('#modaltambah').modal('show');
+            
         }
-        
         function ubah(a){
            
            $.ajax({
                type: 'GET',
-               url: "{{url('pengguna/ubah')}}",
+               url: "{{url('unit/ubah')}}",
                data: "id="+a,
                success: function(msg){
                    $('#modalubah').modal('show');
@@ -171,7 +169,7 @@
            
            $.ajax({
                type: 'GET',
-               url: "{{url('pengguna/hapus')}}",
+               url: "{{url('unit/hapus')}}",
                data: "id="+a,
                success: function(msg){
                    location.reload();
@@ -186,7 +184,7 @@
             
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('/pengguna/simpan')}}",
+                    url: "{{url('/unit/simpan')}}",
                     data: new FormData(form),
                     contentType: false,
                     cache: false,
@@ -216,7 +214,7 @@
             
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('/pengguna/simpan_ubah')}}",
+                    url: "{{url('/unit/simpan_ubah')}}",
                     data: new FormData(form),
                     contentType: false,
                     cache: false,

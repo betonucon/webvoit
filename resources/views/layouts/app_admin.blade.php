@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Top Navigation</title>
+  <title>SKKS Krakatau Steel</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -235,12 +235,16 @@
         <section class="content-header" id="section" style="color:#fff">
           <h1>
             {{$menu}}
+            @if($menu=='E-vote')
+            <small style="color:yellow">{{$namaevote}} SKKS (Serikat Karyawan Krakatau Steel)</small>
+            @else
             <small style="color:yellow">SKKS (Serikat Karyawan Krakatau Steel)</small>
+            @endif
+
+            
+            
           </h1>
-          <ol class="breadcrumb" >
-            <li><a href="#" style="color:#fff"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active" style="color:#fff">{{$menu}}</li>
-          </ol>
+          
         </section>
       @endif
       <!-- Main content -->

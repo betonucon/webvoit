@@ -27,7 +27,13 @@ class GroupController extends Controller
         
     }
     public function hapus_pengguna(request $request){
-        $hapus=Detailgroup::where('id',$request->id)->delete();
+        if(Auth::user()['role_id']==1){
+            $hapus=Detailgroup::where('id',$request->id)->delete();
+        }
+        if(Auth::user()['role_id']==3){
+            $hapus=Detailgroup::where('id',$request->id)->where('kode_group',cek_kode_group())->delete();
+        }
+        
         
     }
     public function ubah(request $request){

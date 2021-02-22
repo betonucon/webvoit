@@ -13,4 +13,8 @@ class Detailpemilihan extends Model
     {
         return $this->belongsTo('App\Pemilihan','pemilihan_id','id');
     }
+    public function pengguna()
+    {
+        return $this->belongsTo('App\Pengguna','nik','nik');
+    }
 }

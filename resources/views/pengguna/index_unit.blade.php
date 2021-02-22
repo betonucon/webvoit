@@ -4,12 +4,36 @@
     <section class="content" id="section">
         
         <div class="box box-default">
-          <div class="box-header with-border">
-            <h3 class="box-title">Blank Box</h3>
-          </div>
-          <div class="box-header with-border">
-            <span class="btn btn-primary btn-sm" onclick="tambah()">Tambah</span>
-            <span class="btn btn-success btn-sm">Upload Excel</span>
+          <div class="box-header with-border" style="background:#e4e4ea">
+              <div class="box-body">
+                <div id="notifikasi"></div>
+                <form method="post" id="mydata" enctype="multipart/form-data">
+                    @csrf
+                      <input type="hidden" name="kode_group" value="{{cek_kode_group()}}">
+                    <div class="form-group" style="margin-bottom:0px">
+                      <label>NIK:</label>
+                      <div class="input-group">
+                        <div class="input-group-addon">
+                          <i class="fa fa-user"></i>
+                        </div>
+                        <input type="text" id="cari" onkeyup="cari_nik(this.value)" class="form-control" >
+                      </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0px">
+                      <label>Nama:</label>
+                      <div class="input-group">
+                        <div class="input-group-addon">
+                          <i class="fa fa-user"></i>
+                        </div>
+                        <input type="text" id="nama" class="form-control" >
+                        <input type="hidden" id="nik" name="nik" class="form-control" >
+                      </div>
+                    </div>
+                </form><br>
+                <button type="button" class="btn btn-primary btn-sm" id="simpan_data" onclick="simpan_data()">Simpan</button>
+                <button type="button" class="btn btn-dafeult btn-sm" id="simpan_data_proses">Proses....</button>
+              </div>
+              
           </div>
           <div class="box-body">
               <div class="form-group">
@@ -117,7 +141,7 @@
             $('#simpan_data_ubah_proses').hide();
             $.ajax({
                type: 'GET',
-               url: "{{url('pengguna/view_data')}}",
+               url: "{{url('pengguna/view_data_unit')}}",
                data: "id=id",
                beforeSend: function(){
                     $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
@@ -130,7 +154,20 @@
             
 
         });
-
+        function cari_nik(a){
+           
+           $.ajax({
+               type: 'GET',
+               url: "{{url('unit/cari_nik_pengguna')}}",
+               data: "id="+a,
+               success: function(msg){
+                   var data=msg.split('@');
+                   $('#nama').val(data[1]);
+                   $('#nik').val(data[0]);
+               }
+           });
+            
+        }
         function cari(a){
            
           $.ajax({
@@ -171,10 +208,21 @@
            
            $.ajax({
                type: 'GET',
-               url: "{{url('pengguna/hapus')}}",
+               url: "{{url('group/hapus_pengguna')}}",
                data: "id="+a,
                success: function(msg){
-                   location.reload();
+                $.ajax({
+                    type: 'GET',
+                    url: "{{url('pengguna/view_data_unit')}}",
+                    data: "id=id",
+                    beforeSend: function(){
+                          $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
+                    },
+                    success: function(msg){
+                          $("#tabeldata").html(msg);
+                        
+                    }
+                });
                    
                }
            });
@@ -186,7 +234,7 @@
             
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('/pengguna/simpan')}}",
+                    url: "{{url('/group/simpan_pengguna')}}",
                     data: new FormData(form),
                     contentType: false,
                     cache: false,
@@ -196,13 +244,30 @@
                         $("#simpan_data").hide()
                     },
                     success: function(msg){
+                      
                         if(msg=='ok'){
-                            location.reload();
+                          
+                          $('#simpan_data').show();
+                          $('#simpan_data_proses').hide();
+                          $.ajax({
+                            type: 'GET',
+                            url: "{{url('pengguna/view_data_unit')}}",
+                            data: "id=id",
+                            beforeSend: function(){
+                                  $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
+                            },
+                            success: function(msg){
+                                  $("#tabeldata").html(msg);
+                                  $("#nik").val('');
+                                  $("#cari").val('');
+                                  $("#nama").val('');
+                                
+                            }
+                          });
                                
                         }else{
                             $("#simpan_data_proses").hide()
                             $("#simpan_data").show()
-                            $('#simpan_data').show();
                             $('#notifikasi').html(msg);
                         }
                         
@@ -211,6 +276,7 @@
                 });
 
         } 
+
         function simpan_data_ubah(){
             var form=document.getElementById('mydata_ubah');
             

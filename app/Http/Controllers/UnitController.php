@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Pengguna;
 use App\User;
 use App\Unit;
@@ -20,8 +21,45 @@ class UnitController extends Controller
 
     }
     public function cari_nik(request $request){
-        $data=Pengguna::where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();
-        echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+        if(Auth::user()['role_id']==1){
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();
+            echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+        }
+        if(Auth::user()['role_id']==3){
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();
+            if($data['detailgroup']['kode_group']==cek_kode_group()){
+                echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+            }else{
+                if($data['detailgroup']['kode_group']==''){
+                    echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+                }else{
+
+                }
+            }
+            
+        }
+        
+
+    }
+    public function cari_nik_pengguna(request $request){
+        if(Auth::user()['role_id']==1){
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();
+            echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+        }
+        if(Auth::user()['role_id']==3){
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();
+            if($data['detailgroup']['kode_group']==cek_kode_group()){
+                echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+            }else{
+                if($data['detailgroup']['kode_group']==''){
+                    echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+                }else{
+
+                }
+            }
+            
+        }
+        
 
     }
     public function ubah(request $request){
