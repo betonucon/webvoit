@@ -10,6 +10,6 @@ class Pengguna extends Model
     public $timestamps = false;
 
     function detailgroup(){
-		return $this->belongsTo('App\Detailgroup','nik','nik');
-	}
+		  return $this->belongsTo('App\Detailgroup','nik','nik');
+	  }
 }

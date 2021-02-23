@@ -16,6 +16,10 @@ function kategori(){
     $data=App\Kategori::all();
     return $data;
 }
+function group(){
+    $data=App\Group::orderBy('name','Asc')->get();
+    return $data;
+}
 
 function cek_detail_group($group,$unit){
     $data=App\Detailgroup::where('kode_group',$group)->where('kode_unit',$unit)->count();
@@ -64,6 +68,57 @@ function cek_kode_group(){
     
     return $kode;
 }
+function enkripsi_akuh($id){
+    $encrypted = Crypt::encryptString($id);
+	$decrypted = Crypt::decryptString($encrypted);
+    
+    return $encrypted;
+
+}
+function deskripsi_akuh($id){
+    $decrypted = Crypt::decryptString("'.$id.'");
+    
+    return $decrypted;
+
+}
+function sisa_waktu(){
+    if(cek_pemilihan_aktif()>0){
+        $cek=App\Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
+        if($cek['mulai']==1){
+            if(date('Y-m-d H:i:s')>$cek['sampai']){
+                $data='<p style="padding:1%;border:dotted 1px yellow">Waktu Telah Habis</p>';
+            }else{
+                $awal  = strtotime(date('Y-m-d H:i:s')); //waktu awal
+                $akhir = strtotime($cek['sampai']); //waktu akhir
+                $diff  = $akhir - $awal;
+                $jam   = floor($diff / (60 * 60));
+                $menit = $diff - $jam * (60 * 60);
+                $data='<p style="padding:1%;border:dotted 1px yellow">Waktu Tersisa tinggal: ' . $jam .  ' jam, ' . floor( $menit / 60 ) . ' menit</p>';
+            }
+        }else{
+            $data='Vote Belum dimulai';
+        }
+    }else{
+        $data='';
+    }
+    
+
+    return $data;
+}
+function cek_pemilihan($id){
+    $data=App\Quickcount::where('pemilihan_id',$id)->where('username',Auth::user()['username'])->count();
+    return $data;
+}
+function cek_quickcount($id,$nik){
+    $data=App\Quickcount::where('pemilihan_id',$id)->where('username',$nik)->count();
+    return $data;
+}
+function cek_hasil($nik,$pemilihan_id,$kode_group){
+    $data=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('nik',$nik)->count();
+    $jumlah_anggota=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('kode_group',$kode_group)->count();
+    $total=round(($data*100)/$jumlah_anggota);
+    return $total.'%';
+}
 function cek_name_group(){
     
     if(Auth::user()['role_id']==3){
@@ -78,6 +133,11 @@ function kode_unit(){
     $data=App\Pengguna::where('nik',Auth::user()['username'])->first();
 
     return $data['kode_unit'];
+}
+function cek_voters($id){
+    $data=App\Voters::where('nik',Auth::user()['username'])->where('pemilihan_id',$id)->count();
+
+    return $data;
 }
 function groupnya(){
     $dat=App\Detailgroup::where('nik',Auth::user()['username'])->first();

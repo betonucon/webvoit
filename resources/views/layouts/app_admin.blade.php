@@ -82,7 +82,8 @@
         display: flex;
       }
       .imgnya{
-        width:99%;
+        width: 100%;
+        height: 180px;
         margin-left:0.5%;
         /* border-radius:100%; */
         display:block;
@@ -91,7 +92,7 @@
       .img_user{
         width:100%;
         height:150px;
-        display: flex;
+        display: initial;
         position: relative;
         /* border:solid 1px #dcbebe; */
       }
@@ -106,6 +107,13 @@
         width:100%;
         padding:1%;
         border:solid 1px #dcbebe;
+        font-weight:bold;
+        font-size:13px;
+      }
+      .nama_user_no{
+        width:100%;
+        padding:1%;
+        border:solid 1px #fff;
         font-weight:bold;
         font-size:13px;
       }
@@ -244,6 +252,10 @@
             
             
           </h1>
+          <div id="sisa_waktu" ></div>
+          <ol class="breadcrumb">
+            <li><a href="#" style="color:#fff"><div id="waktu_sekarang"></div></a></li>
+          </ol>
           
         </section>
       @endif

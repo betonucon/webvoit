@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Pemilihan;
+use App\Voters;
 use App\User;
 use App\Unit;
 
@@ -19,6 +20,7 @@ class PemilihanController extends Controller
     }
     public function index_unit(request $request){
         $menu='Pemilihan';
+        
         if(Auth::user()['role_id']==3){
             return view('pemilihan.index_unit',compact('menu'));
         }else{
@@ -47,6 +49,12 @@ class PemilihanController extends Controller
         ]);
         
     }
+
+
+    public function sisa_waktu(request $request){
+        echo sisa_waktu().'@Jam Server : '.date('d-m-Y H:i:s');
+
+    }
     public function hidupkan(request $request){
         $data      =Pemilihan::where('id',$request->id)->where('sts',1)->first();
         $data->mulai  =1;
@@ -62,38 +70,149 @@ class PemilihanController extends Controller
         error_reporting(0);
        
         $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
-        if(Auth::user()['role_id']==3){
-            $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
-        }
-        if(Auth::user()['role_id']==2){
-            $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
-        }
-        if(Auth::user()['role_id']==1){
-            $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
-        }
-        
-        foreach($data as $no=>$det){
-            echo'
-                <div class="colom-25">
-                    <div class="nomor_user">
-                      NO '.($no+1).' 
-                    </div>
-                    <div class="img_user">';
-                        if($det->pemilihan['mulai']==1){
-                            echo' <a href="#"><img src="'.url('profil/'.cek_pengguna($det['nik'])['foto']).'" onclick="pilih('.$no.')" class="imgnya" alt="User Image"></a>';
-                        
-                        }else{
-                            echo'<img src="'.url('profil/'.cek_pengguna($det['nik'])['foto']).'"  class="imgnya" alt="User Image">';
-                        
-                        }
+        if($cek['kat']==1){
+            if(Auth::user()['role_id']==3){
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
+            }
+            if(Auth::user()['role_id']==2){
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
+            }
+            if(Auth::user()['role_id']==1){
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
+            }
+            if(date('Y-m-d H:i:s')>$cek['sampai']){
+                foreach($data as $no=>$det){
+                    echo'
+                        <div class="colom-25">
+                            <div class="nomor_user">
+                            NO '.($no+1).' 
+                            </div>
+                            <div class="img_user">
+                                <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
+                            </div>
+                            <div class="nama_user">
+                                '.cek_pengguna($det['nik'])['name'].'<br>
+                                '.$det['nik'].'
+                            </div>
+                            <div class="nama_user_no">
+                                
+                                '.cek_hasil($det['nik'],$det['pemilihan_id'],$det['kode_group']).'
+                            </div>
+                        </div>';
+                }
+            }else{
+                foreach($data as $no=>$det){
+                    echo'
+                        <div class="colom-25">
+                            <div class="nomor_user">
+                            NO '.($no+1).' 
+                            </div>
+                            <div class="img_user">';
+                                if($det->pemilihan['mulai']==1){
+                                    echo' <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">';
+                                
+                                }else{
+                                    echo'<img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">';
+                                
+                                }
+                                echo'
+                                
+                            </div>
+                            <div class="nama_user">
+                            '.cek_pengguna($det['nik'])['name'].'<br>
+                            '.$det['nik'].'
+                            </div>';
+                            if($det->pemilihan['mulai']==1){
+                                if(cek_pemilihan($cek['id'])>0){
+
+                                }else{
+                                    echo'
+                                    <div class="nama_user_no">
+                                        <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
+                                    </div>';
+                                }
+                                    
+                            }else{
+                                
+                            }
+                            echo'
+                        </div>';
+                }
+            }
+        }else{
+            if(Auth::user()['role_id']==3){
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
+            }
+            if(Auth::user()['role_id']==2){
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
+            }
+            if(Auth::user()['role_id']==1){
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
+            }
+            
+            if(cek_voters($cek['id'])>0){
+                if(date('Y-m-d H:i:s')>$cek['sampai']){
+                    foreach($data as $no=>$det){
                         echo'
-                        <div class="centered"><span class="btn btn-primary btn-sm">Klik Area Foto</span></div>
-                    </div>
-                    <div class="nama_user">
-                      '.cek_pengguna($det['nik'])['name'].'<br>
-                      '.$det['nik'].'
-                    </div>
-                </div>';
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.($no+1).' 
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                    '.cek_pengguna($det['nik'])['name'].'<br>
+                                    '.$det['nik'].'
+                                </div>
+                                <div class="nama_user_no">
+                                    
+                                    '.cek_hasil($det['nik'],$det['pemilihan_id'],$det['kode_group']).'
+                                </div>
+                            </div>';
+                    }
+                }else{
+                    foreach($data as $no=>$det){
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.($no+1).' 
+                                </div>
+                                <div class="img_user">';
+                                    if($det->pemilihan['mulai']==1){
+                                        echo' <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">';
+                                    
+                                    }else{
+                                        echo'<img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">';
+                                    
+                                    }
+                                    echo'
+                                    
+                                </div>
+                                <div class="nama_user">
+                                '.cek_pengguna($det['nik'])['name'].'<br>
+                                '.$det['nik'].'
+                                </div>';
+                                if($det->pemilihan['mulai']==1){
+                                    if(cek_pemilihan($cek['id'])>0){
+    
+                                    }else{
+                                        echo'
+                                        <div class="nama_user_no">
+                                            <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
+                                        </div>';
+                                    }
+                                        
+                                }else{
+                                    
+                                }
+                                echo'
+                            </div>';
+                    }
+                }
+            }else{
+                echo'<center> <img src="'.url('img/no_akses.png').'" style="width:20%"></center>';
+            }
         }
     }
     public function view_data_vote_admin(request $request){
@@ -157,10 +276,37 @@ class PemilihanController extends Controller
                 <input type="text" name="periode" class="form-control" value="'.$data['periode'].'" id="periode_ubah">
                 </div>
             </div>
+            <div class="form-group" style="margin-bottom: 0px;">
+                <label>Kategori Vote</label>
+                <select name="kat" class="form-control">
+                    <option value="">Pilih Vote</option>
+                    <option value="1" '; if($data['kat']==1){echo'selected';} echo'>RUTU</option>
+                    <option value="2" '; if($data['kat']==2){echo'selected';} echo'>Semua Unit SKKS</option>
+                    
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Batas Waktu Vote</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-clock-o"></i>
+                    </div>
+                    <input type="text" name="sampai" value="'.$data['sampai'].'" class="form-control pull-right" id="datetimepickerubah" >
+                </div>
+                <!-- /.input group -->
+            </div>
             <script>
                 $(document).ready(function(){
                     $("#birth-date").mask("00/00/0000");
                     $("#periode_ubah").mask("0000-0000");
+                });
+
+               
+                $(function () {
+                  $("#datetimepickerubah").datetimepicker({
+                      format: "YYYY-MM-DD HH:mm:ss"
+                  });
                 });
             </script>
         ';
@@ -172,6 +318,53 @@ class PemilihanController extends Controller
         }
         if(Auth::user()['role_id']=='3'){
             $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->get();
+        }
+        
+        echo'
+            <style>
+                th{
+                   background:#d1d1dc;
+                   text-align:center;
+                   padding:4px;
+                   border:solid 1px #000;
+                }
+                td{
+                   padding:4px;
+                   border:solid 1px #000;
+                }
+            </style>
+            <table width="100%" class="table-bordered table-hover dataTable">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="10%">NIK</th>
+                    <th>Nama</th>
+                    <th>Area Kerja</th>
+                    <th width="8%"></th>
+                </tr>
+
+        ';
+        foreach($data as $no=>$o){
+            echo'
+                <tr>
+                    <td>'.($no+1).'</td>
+                    <td>'.$o['nik'].'</td>
+                    <td>'.$o['pengguna']['name'].'</td>
+                    <td>'.cek_unit($o->pengguna['kode_unit']).'</td>
+                    <td>
+                        <span class="btn btn-danger btn-xs" onclick="hapus_paslon(`'.$o['nik'].'`,'.$o['pemilihan_id'].')"><i class="fa fa-remove"></i></span>
+                    </td>
+                </tr>
+
+            ';
+        }
+    }
+
+    public function view_data_voters(request $request){
+        if(Auth::user()['role_id']=='1'){
+            $data=Voters::with(['pengguna'])->where('pemilihan_id',$request->id)->get();
+        }
+        if(Auth::user()['role_id']=='3'){
+            $data=Voters::with(['pengguna'])->where('pemilihan_id',$request->id)->where('nik',Auth::user()['username'])->get();
         }
         
         echo'
@@ -228,7 +421,8 @@ class PemilihanController extends Controller
                     <th width="27%">Nama Pemilihan</th>
                     <th width="10%">Periode</th>
                     <th>Calon</th>
-                    <th width="6%">Tambah</th>
+                    <th width="4%">Pas</th>
+                    <th width="4%">Vot</th>
                     <th width="6%">Aktif</th>
                     <th width="6%">Status</th>
                     <th width="8%"></th>
@@ -238,10 +432,12 @@ class PemilihanController extends Controller
 
         foreach($data as $no=>$o){
             $detail=Detailpemilihan::where('pemilihan_id',$o['id'])->get();
+            if($o['kat']==1){$color="#f4f4f7";$evot='<span class="btn btn-default btn-xs"><i class="fa fa-users"></i></span>';}
+            if($o['kat']==2){$color="#fff";$evot='<span class="btn btn-xs btn-success" onclick="tambah_voters('.$o['id'].')"><i class="fa fa-users"></i></span>';}
             echo'
-                <tr>
+                <tr bgcolor="'.$color.'">
                     <td>'.($no+1).'</td>
-                    <td>'.$o['name'].'</td>
+                    <td>'.$o['name'].'<br><b>Batas :</b> '.$o['sampai'].'</td>
                     <td>'.$o['periode'].'</td>
                     <td>';
                         foreach($detail as $no=>$det){
@@ -251,6 +447,7 @@ class PemilihanController extends Controller
                     echo'
                     </td>
                     <td><span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['id'].')"><i class="fa fa-users"></i></span></td>
+                    <td>'.$evot.'</td>
                     <td>';
                         if($o['sts']==0){
                             echo'<span class="btn btn-default btn-xs" onclick="aktif('.$o['id'].')"><i class="fa fa-remove"></i> Off</span>';
@@ -281,7 +478,7 @@ class PemilihanController extends Controller
         echo'</table>';
     }
     public function view_data_perunit(request $request){
-        $data=Pemilihan::orderBy('name','Asc')->get();
+        $data=Pemilihan::where('kat',1)->orderBy('name','Asc')->get();
         echo'
             <style>
                 th{
@@ -314,7 +511,7 @@ class PemilihanController extends Controller
             echo'
                 <tr>
                     <td>'.($no+1).'</td>
-                    <td>'.$o['name'].'</td>
+                    <td>'.$o['name'].'<br><b>Batas :</b> '.$o['sampai'].'</td>
                     <td>'.$o['periode'].'</td>
                     <td>';
                         foreach($detail as $no=>$det){
@@ -413,6 +610,8 @@ class PemilihanController extends Controller
         
         if (trim($request->name) == '') {$error[] = '-Isi Nama Pemilihan terlebih dahulu';}
         if (trim($request->periode) == '') {$error[] = '-Isi Periode terlebih dahulu';}
+        if (trim($request->kat) == '') {$error[] = '-Pilih kategori Vote terlebih dahulu';}
+        if (trim($request->sampai) == '') {$error[] = '-Isi Batas Waktu Vote terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             $cek=Pemilihan::where('name',$request->name)->where('periode',$request->periode)->count();
@@ -422,6 +621,8 @@ class PemilihanController extends Controller
                 $data           = New Pemilihan;
                 $data->name     = $request->name;
                 $data->periode     = $request->periode;
+                $data->kat     = $request->kat;
+                $data->sampai     = $request->sampai;
                 $data->sts     = 0;
                 $data->mulai     = 0;
                 $data->save();
@@ -458,16 +659,44 @@ class PemilihanController extends Controller
             }
         }
     }
+    public function simpan_voters(request $request){
+        
+        if (trim($request->pemilihan_id) == '') {$error[] = '-Isi id terlebih dahulu';}
+        if (trim($request->nik) == '') {$error[] = '-Isi NIK terlebih dahulu';}
+        if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
+        else{
+            
+            $cek=Voters::where('nik',$request->nik)->where('pemilihan_id',$request->pemilihan_id)->count();
+            if($cek>0){
+                echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> NIK sudah terdaftar calon pemilihan ini</p>';
+            }else{
+                $data                   = New Voters;
+                $data->pemilihan_id     = $request->pemilihan_id;
+                $data->nik              = $request->nik;
+                $data->kode_group        = cek_pengguna($request->nik)->detailgroup['kode_group'];
+                $data->save();
+
+                if($data){
+                   
+                    echo'ok@'.$request->pemilihan_id;
+                }
+            }
+        }
+    }
 
     public function simpan_ubah(request $request){
         
         if (trim($request->name) == '') {$error[] = '-Isi Nama Group terlebih dahulu';}
+        if (trim($request->kat) == '') {$error[] = '-Pilih kategori Vote terlebih dahulu';}
+        if (trim($request->sampai) == '') {$error[] = '-Isi Batas Waktu Vote terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             
                 $data           = Pemilihan::find($request->id);
                 $data->name     = $request->name;
                 $data->periode     = $request->periode;
+                $data->kat     = $request->kat;
+                $data->sampai     = $request->sampai;
                 $data->mulai     = 0;
                 $data->save();
 

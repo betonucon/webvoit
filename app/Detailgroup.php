@@ -10,6 +10,10 @@ class Detailgroup extends Model
     public $timestamps = false;
 
     function groupnya(){
-		return $this->hasOne('App\Group','kode_group','kode_group');
-	}
+		  return $this->hasOne('App\Group','kode_group','kode_group');
+	  }
+    public function pengguna()
+    {
+        return $this->belongsTo('App\Pengguna','nik','nik');
+    }
 }

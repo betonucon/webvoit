@@ -20,6 +20,7 @@ Route::group(['middleware'    => 'auth'],function(){
 Route::group(['middleware'    => 'auth'],function(){
     
     Route::get('/pengguna','PenggunaController@index');
+    Route::get('/pengguna/enkripsi','PenggunaController@enkripsi');
     Route::get('/pengguna_unit','PenggunaController@index_unit');
     Route::get('/pengguna/hapus','PenggunaController@hapus');
     Route::get('/pengguna/ubah','PenggunaController@ubah');
@@ -61,14 +62,17 @@ Route::group(['middleware'    => 'auth'],function(){
     Route::get('/pemilihan_unit','PemilihanController@index_unit');
     
     Route::get('/pemilihan/hapus','PemilihanController@hapus');
+    Route::get('/pemilihan/sisa_waktu','PemilihanController@sisa_waktu');
     Route::get('/pemilihan/ubah','PemilihanController@ubah');
     Route::get('/pemilihan/hapus_paslon','PemilihanController@hapus_paslon');
     Route::post('/pemilihan/simpan','PemilihanController@simpan');
     Route::post('/pemilihan/simpan_ubah','PemilihanController@simpan_ubah');
     Route::post('/pemilihan/simpan_paslon','PemilihanController@simpan_paslon');
+    Route::post('/pemilihan/simpan_voters','PemilihanController@simpan_voters');
     Route::get('/pemilihan/view_data','PemilihanController@view_data');
     Route::get('/pemilihan/view_data_perunit','PemilihanController@view_data_perunit');
     Route::get('/pemilihan/view_data_paslon','PemilihanController@view_data_paslon');
+    Route::get('/pemilihan/view_data_voters','PemilihanController@view_data_voters');
     Route::get('/pemilihan/tambah_paslon','PemilihanController@tambah_paslon');
     Route::get('/pemilihan/aktif','PemilihanController@aktif');
     Route::get('/pemilihan/non_aktif','PemilihanController@non_aktif');
@@ -77,8 +81,15 @@ Route::group(['middleware'    => 'auth'],function(){
 });
 
 Route::group(['middleware'    => 'auth'],function(){
+    Route::get('/quickcount', 'QuickcountController@index');
+    Route::get('/quickcount/view_data', 'QuickcountController@view_data');
+    Route::get('/quickcount/hapus', 'QuickcountController@hapus');
+    Route::get('/quickcount/view_data_hasil', 'QuickcountController@view_data_hasil');
+    Route::post('/quickcount/simpan', 'QuickcountController@simpan');
+});
+Route::group(['middleware'    => 'auth'],function(){
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/', 'HomeController@index');
     Route::get('/evote', 'HomeController@pilih');
 });
 

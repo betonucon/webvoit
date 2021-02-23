@@ -26,8 +26,7 @@
   <link rel="stylesheet" href="{{url(link_html().'/bower_components/select2/dist/css/select2.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{url(link_html().'/dist/css/AdminLTE.min.css')}}">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
+  
   <link rel="stylesheet" href="{{url(link_html().'/dist/css/skins/_all-skins.min.css')}}">
   <style>
     @media only screen and (min-width: 650px) {
@@ -58,7 +57,6 @@
       .imgnya{
         width:99%;
         margin-left:0.5%;
-        /* border-radius:100%; */
         display:block;
       }
         
@@ -67,8 +65,8 @@
       .imgnya{
         width:99%;
         margin-left:0.5%;
-        /* border-radius:100%; */
         display:block;
+      }
         
     }
   </style>
@@ -371,6 +369,7 @@
 <script src="{{url(link_html().'/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
 <!-- bootstrap datepicker -->
 <script src="{{url(link_html().'/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+
 <!-- bootstrap color picker -->
 <script src="{{url(link_html().'/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}"></script>
 <!-- bootstrap time picker -->
@@ -385,7 +384,7 @@
 <script src="{{url(link_html().'/dist/js/adminlte.min.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{url(link_html().'/dist/js/demo.js')}}"></script>
-<!-- Page script -->
+<script src="{{url(link_html().'/bower_components/bootstrap-datepicker/js/datetimepicker.js')}}"></script><!-- Page script -->
 @stack('ajax')
 <script>
   $(function () {

@@ -8,8 +8,18 @@ use Illuminate\Support\Facades\Auth;
 use App\Pengguna;
 use App\Detailgroup;
 use App\User;
+use Illuminate\Support\Facades\Crypt;
 class PenggunaController extends Controller
 {
+    public function enkripsi(request $request){
+		$curl = curl_init();
+        curl_setopt ($curl, CURLOPT_URL, "https://sso.krakatausteel.com/hci/pic/".deskripsi_akuh($request['text']).".jpg");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    
+        $result = curl_exec ($curl);
+        curl_close ($curl);
+        print $result;
+	}
     public function index(request $request){
         $menu='Pengguna';
 
@@ -182,7 +192,6 @@ class PenggunaController extends Controller
         if (trim($request->nik) == '') {$error[] = '- Isi NIK terlebih dahulu';}
         if (trim($request->name) == '') {$error[] = '-Isi Nama terlebih dahulu';}
         if (trim($request->kode_unit) == '') {$error[] = '- Pilih Unit Kerja terlebih dahulu';}
-        if (trim($request->file) == '') {$error[] = '- Upload Foto Profil terlebih dahulu';}
         if (trim($request->role_id) == '') {$error[] = '- Pilih role terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
@@ -191,41 +200,26 @@ class PenggunaController extends Controller
                 echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> Nik atau Email sudah terdaftar</p>';
             }else{
                 $patr='/\s+/';
-                $file=$_FILES['file']['name'];
-                $size=$_FILES['file']['size'];
-                $asli=$_FILES['file']['tmp_name'];
-                $ukuran=getimagesize($_FILES["file"]['tmp_name']);
-                $tipe=explode('/',$_FILES['file']['type']);
-                $filename=$request->nik.'.'.$tipe[1];
-                $lokasi='profil/';
                 $email=preg_replace($patr,'.',$request->name);
-                if($tipe[0]=='image' && $size<=198640){
-                    if(move_uploaded_file($asli, $lokasi.$filename)){
-                        $data           = New User;
-                        $data->name     = $request->name;
-                        $data->username = $request->nik;
-                        $data->email    = $email;
-                        $data->role_id    = $request->role_id;
-                        $data->password = Hash::make($request->nik);
-                        $data->save();
-
-                        if($data){
-                            $pengguna           = New Pengguna;
-                            $pengguna->name     = $request->name;
-                            $pengguna->kode_unit     = $request->kode_unit;
-                            $pengguna->nik = $request->nik;
-                            $pengguna->foto = $filename;
-                            $pengguna->save();
-
-                            echo'ok';
-                        }
-                    }else{
-                        echo '<p style="font-size:12px;padding:5px;background:#d1ffae"><b>Error</b>: <br />- Upload gagal</p>';
-                    }
-                }else{
-                    echo '<p style="font-size:12px;padding:5px;background:#d1ffae"><b>Error</b>: <br />- Ukuran file max 200kb</br>- Type file harus gambar </br> - Dengan Lebar dan tinggi 1000X529</p>';
-                }
                 
+                $data           = New User;
+                $data->name     = $request->name;
+                $data->username = $request->nik;
+                $data->email    = $email;
+                $data->role_id    = $request->role_id;
+                $data->password = Hash::make($request->nik);
+                $data->save();
+
+                if($data){
+                    $pengguna           = New Pengguna;
+                    $pengguna->name     = $request->name;
+                    $pengguna->kode_unit     = $request->kode_unit;
+                    $pengguna->nik = $request->nik;
+                    $pengguna->save();
+
+                    echo'ok';
+                }
+                    
             }
         }
     }
@@ -237,7 +231,7 @@ class PenggunaController extends Controller
         if (trim($request->role_id) == '') {$error[] = '- Pilih role terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
-            if($request->file==''){
+            
                 $data           = User::where('username',$request->nik)->first();
                 $data->name     = $request->name;
                 $data->role_id     = $request->role_id;
@@ -251,39 +245,7 @@ class PenggunaController extends Controller
 
                     echo'ok';
                 }
-            }else{
-
-
-                $file=$_FILES['file']['name'];
-                $size=$_FILES['file']['size'];
-                $asli=$_FILES['file']['tmp_name'];
-                $ukuran=getimagesize($_FILES["file"]['tmp_name']);
-                $tipe=explode('/',$_FILES['file']['type']);
-                $filename=$request->nik.'.'.$tipe[1];
-                $lokasi='profil/';
-                if($tipe[0]=='image' && $size<=198640){
-                    if(move_uploaded_file($asli, $lokasi.$filename)){
-                        $data           = User::where('username',$request->nik)->first();
-                        $data->name     = $request->name;
-                        $data->save();
-
-                        if($data){
-                            $pengguna           = Pengguna::where('nik',$request->nik)->first();
-                            $pengguna->name     = $request->name;
-                            $pengguna->kode_unit     = $request->kode_unit;
-                            $pengguna->foto     = $filename;
-                            $pengguna->save();
-
-                            echo'ok';
-                        }   
-                    }else{
-                        echo '<p style="font-size:12px;padding:5px;background:#d1ffae"><b>Error</b>: <br />- Upload gagal</p>';
-                    }
-                }else{
-                    echo '<p style="font-size:12px;padding:5px;background:#d1ffae"><b>Error</b>: <br />- Ukuran file max 200kb</br>- Type file harus gambar </br> - Dengan Lebar dan tinggi 1000X529</p>';
-                }
-
-            }
+            
            
         }
     }
