@@ -204,7 +204,7 @@ class QuickcountController extends Controller
         foreach($data as $no=>$o){
             if(Auth::user()['role_id']==1){
                 if($o['pemilihan']['kat']==1){
-                    $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',$request->kode_group)->get();
+                    $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',$request->kode_group)->orWhere('kode_group',101)->get();
                 }
                 if($o['pemilihan']['kat']==2){
                     $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->get();
@@ -212,7 +212,7 @@ class QuickcountController extends Controller
                 
             }
             if(Auth::user()['role_id']==3){
-                $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',cek_kode_group())->get();
+                $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->get();
             }
             
             if($o['pemilihan']['kat']==2){$color="#f4f4f7";$evot='<span class="btn btn-default btn-xs"><i class="fa fa-users"></i></span>';}

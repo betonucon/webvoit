@@ -115,7 +115,7 @@ function cek_quickcount($id,$nik){
 }
 function cek_hasil($nik,$pemilihan_id,$kode_group){
     $data=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('nik',$nik)->count();
-    $jumlah_anggota=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('kode_group',$kode_group)->count();
+    $jumlah_anggota=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('kode_group',$kode_group)->orWhere('kode_group',101)->count();
     $total=round(($data*100)/$jumlah_anggota);
     return $total.'%';
 }

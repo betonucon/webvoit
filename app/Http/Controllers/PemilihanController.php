@@ -72,71 +72,117 @@ class PemilihanController extends Controller
         $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
         if($cek['kat']==1){
             if(Auth::user()['role_id']==3){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nik','Asc')->get();
             }
             if(Auth::user()['role_id']==2){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nik','Asc')->get();
             }
             if(Auth::user()['role_id']==1){
                 $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
             }
             if(date('Y-m-d H:i:s')>$cek['sampai']){
                 foreach($data as $no=>$det){
-                    echo'
-                        <div class="colom-25">
-                            <div class="nomor_user">
-                            NO '.($no+1).' 
+                    if($det['nik']==999999){
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.($no+1).' 
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                    PILIHAN LAIN<br>
+                                    '.$det['nik'].'
+                                </div>
+                                <div class="nama_user_no">
+                                    
+                                    '.cek_hasil($det['nik'],$det['pemilihan_id'],$det['kode_group']).'
+                                </div>
                             </div>
-                            <div class="img_user">
-                                <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
+                        ';
+                    }else{
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.($no+1).' 
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                    '.cek_pengguna($det['nik'])['name'].'<br>
+                                    '.$det['nik'].'
+                                </div>
+                                <div class="nama_user_no">
+                                    
+                                    '.cek_hasil($det['nik'],$det['pemilihan_id'],$det['kode_group']).'
+                                </div>
                             </div>
-                            <div class="nama_user">
-                                '.cek_pengguna($det['nik'])['name'].'<br>
-                                '.$det['nik'].'
-                            </div>
-                            <div class="nama_user_no">
-                                
-                                '.cek_hasil($det['nik'],$det['pemilihan_id'],$det['kode_group']).'
-                            </div>
-                        </div>';
+                        ';
+                    }
                 }
             }else{
                 foreach($data as $no=>$det){
-                    echo'
-                        <div class="colom-25">
-                            <div class="nomor_user">
-                            NO '.($no+1).' 
-                            </div>
-                            <div class="img_user">';
+                    if($det['nik']==999999){
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.($no+1).' 
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                PILIHAN LAIN<br>
+                                '.$det['nik'].'
+                                </div>';
                                 if($det->pemilihan['mulai']==1){
-                                    echo' <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">';
-                                
+                                    if(cek_pemilihan($cek['id'])>0){
+
+                                    }else{
+                                        echo'
+                                        <div class="nama_user_no">
+                                            <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
+                                        </div>';
+                                    }
+                                        
                                 }else{
-                                    echo'<img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">';
-                                
+                                    
                                 }
                                 echo'
-                                
                             </div>
-                            <div class="nama_user">
-                            '.cek_pengguna($det['nik'])['name'].'<br>
-                            '.$det['nik'].'
-                            </div>';
-                            if($det->pemilihan['mulai']==1){
-                                if(cek_pemilihan($cek['id'])>0){
+                        ';
+                    }else{
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.($no+1).' 
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                '.cek_pengguna($det['nik'])['name'].'<br>
+                                '.$det['nik'].'
+                                </div>';
+                                if($det->pemilihan['mulai']==1){
+                                    if(cek_pemilihan($cek['id'])>0){
 
+                                    }else{
+                                        echo'
+                                        <div class="nama_user_no">
+                                            <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
+                                        </div>';
+                                    }
+                                        
                                 }else{
-                                    echo'
-                                    <div class="nama_user_no">
-                                        <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
-                                    </div>';
-                                }
                                     
-                            }else{
-                                
-                            }
-                            echo'
-                        </div>';
+                                }
+                                echo'
+                            </div>
+                        ';
+                    }
                 }
             }
         }else{
@@ -629,6 +675,12 @@ class PemilihanController extends Controller
 
                 if($data){
                    
+                    $pass                   = New Detailpemilihan;
+                    $pass->pemilihan_id     = $data['id'];
+                    $pass->nik              = 999999;
+                    $pass->kode_group       = 101;
+                    $pass->save();
+
                     echo'ok';
                 }
             }
