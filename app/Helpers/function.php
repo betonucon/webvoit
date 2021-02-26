@@ -146,9 +146,16 @@ function groupnya(){
 }
 
 function title(){
-    $data=App\Title::orderBy('id','desc')->firstOrFail();
+    $data=App\Pemilihan::where('sts',1)->count();
+    if($data>0){
+        $cek=App\Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
+        $title=$cek['name'].'<br>Periode '.$cek['periode'];
+    }else{
+        $title='SKKS (Serikat Karyawan Krakatau Steel)';
+    }
+    
 
-    return $data;
+    return $title;
 }
 function pemilihan_aktif(){
     $cek=App\Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();

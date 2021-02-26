@@ -188,8 +188,8 @@
       <img src="{{url('img/logo_skks.png')}}" style="width:100%">
     </div>
     <div class="img-tengah">
-      {{title()['name']}}<br>
-      {{title()['periode']}}
+      {!!title()!!}
+      
     </div>
     <div class="img-kanan">
       <img src="{{url('img/logo_ks.png')}}" style="width:100%">
@@ -243,7 +243,7 @@
         <section class="content-header" id="section" style="color:#fff">
           <h1>
             {{$menu}}
-            @if($menu=='E-vote')
+            @if($menu=='E-vote' || $menu=='Home')
             <small style="color:yellow">{{$namaevote}} SKKS (Serikat Karyawan Krakatau Steel)</small>
             @else
             <small style="color:yellow">SKKS (Serikat Karyawan Krakatau Steel)</small>

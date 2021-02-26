@@ -159,7 +159,7 @@ class QuickcountController extends Controller
     }
     public function simpan(request $request){
         $cek=Detailpemilihan::where('id',$request->id)->first();
-        $cek_pilih=Quickcount::where('pemilihan_id',$request->id)->where('nik',$cek['nik'])->count();
+        $cek_pilih=Quickcount::where('pemilihan_id',$request->id)->where('username',Auth::user()['username'])->count();
         if($cek_pilih>0){
             
         }else{
