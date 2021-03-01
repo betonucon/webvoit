@@ -11,7 +11,16 @@
 |
 */
 
+Route::get('login', function () {
+    return redirect('http://sso.krakatausteel.com/');
+});
+Route::get('login_skks/'.date('Ymd'), function () {
+    return view('auth.login');
+});
 
+Route::post('login', 'Auth\LoginController@login')->name('login');
+Route::post('register', 'Auth\LoginController@login')->name('register');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('a/{personnel_no}/', 'Auth\LoginController@programaticallyEmployeeLogin')->name('login.a');
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/view_data_homenya','PemilihanController@view_data_vote');
@@ -44,7 +53,8 @@ Route::group(['middleware'    => 'auth'],function(){
 
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/group','GroupController@index');
-    Route::get('/group/hapus','GroupController@hapus');
+    Route::get('/group/hapus','GroupController@hapus'); 
+    Route::get('/group/tampilkan_group','GroupController@tampilkan_group'); 
     Route::get('/group/hapus_pengguna','GroupController@hapus_pengguna');
     Route::get('/group/pengguna','GroupController@pengguna');
     Route::get('/group/ubah','GroupController@ubah');
@@ -95,6 +105,6 @@ Route::group(['middleware'    => 'auth'],function(){
 });
 
 
-Auth::routes();
+// Auth::routes();
 
 

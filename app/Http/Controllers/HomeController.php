@@ -25,17 +25,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $menu='Home';
-        $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
         
-        $namaevote=$cek['name'];
+        
         if(Auth::user()['role_id']==1){
             $menu='Home';
             return view('home_admin',compact('menu'));
         }
         if(Auth::user()['role_id']==3){
             $menu='Home';
-            return view('home_admin',compact('menu'));
+            return view('pengguna.index_unit',compact('menu'));
         }
         if(Auth::user()['role_id']==2){
             $cekaktif=Pemilihan::where('sts',1)->orderBy('id','desc')->count();

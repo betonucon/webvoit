@@ -1,14 +1,18 @@
 @extends('layouts.app_admin_kanan')
-
+<style>
+          .kolom{
+                width:80%;
+                margin-left:10%;
+                margin-top:5%;
+                border:dotted blue 2px;
+                padding:1%;
+                text-align:center;
+                font-size:24px;
+            }
+</style>
 @section('content')
     <section class="content" id="section">
-        
-        <div class="box" style="display:flex;background: none;border-top: none;box-shadow: none;">
-          
-          
-            
-          
-        </div>
+        <div id="tampilkandata"></div>
         
     </section>
 
@@ -24,13 +28,13 @@
       $(document).ready(function() {
             $.ajax({
                type: 'GET',
-               url: "{{url('view_data_homenya_admin')}}",
+               url: "{{url('group/tampilkan_group')}}",
                data: "id=id",
                beforeSend: function(){
-                    $("#tampilkan_paslon").html('<center> Proses Data.............</center>');
+                    $("#tampilkandata").html('<center> Proses Data.............</center>');
                },
                success: function(msg){
-                    $("#tampilkan_paslon").html(msg);
+                    $("#tampilkandata").html(msg);
                   
                }
            });

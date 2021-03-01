@@ -113,6 +113,14 @@ function cek_quickcount($id,$nik){
     $data=App\Quickcount::where('pemilihan_id',$id)->where('username',$nik)->count();
     return $data;
 }
+function total_pengguna($id){
+    $data=App\Detailgroup::where('kode_group',$id)->count();
+    return $data;
+}
+function semua_total_pengguna(){
+    $data=App\Detailgroup::count();
+    return $data;
+}
 function cek_hasil($nik,$pemilihan_id,$kode_group){
     $data=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('nik',$nik)->count();
     $jumlah_anggota=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('kode_group',$kode_group)->orWhere('kode_group',101)->count();
