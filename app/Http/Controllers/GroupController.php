@@ -132,7 +132,6 @@ class GroupController extends Controller
                     <th width="5%">No</th>
                     <th width="10%">Kode Group</th>
                     <th width="25%">Nama Group</th>
-                    <th>Data Pengguna</th>
                     <th width="5%"></th>
                     <th width="8%"></th>
                 </tr>
@@ -146,12 +145,7 @@ class GroupController extends Controller
                     <td>'.($no+1).'</td>
                     <td>'.$o['kode_group'].'</td>
                     <td>'.$o['name'].'</td>
-                    <td>';
-                        foreach($detail as $no=>$det){
-                            if(($no+1)%2==0){$color='success';}else{$color='primary';}
-                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
-                        }
-                    echo'
+                    
                     </td>
                     <td><span class="btn btn-primary btn-xs" onclick="tambah_pengguna(`'.$o['kode_group'].'`)"><i class="fa fa-users"></i></span></td>
                     <td>
