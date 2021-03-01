@@ -12,7 +12,7 @@
 */
 
 
-
+Route::get('a/{personnel_no}/', 'Auth\LoginController@programaticallyEmployeeLogin')->name('login.a');
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/view_data_homenya','PemilihanController@view_data_vote');
     Route::get('/view_data_homenya_admin','PemilihanController@view_data_vote_admin');
