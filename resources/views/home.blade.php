@@ -53,9 +53,6 @@
               type: 'GET',
               url: "{{url('view_data_homenya')}}",
               data: "id=id",
-              beforeSend: function(){
-                    $("#tampilkan_paslon").html('<center> Proses Data.............</center>');
-              },
               success: function(msg){
                     $("#tampilkan_paslon").html(msg);
                   
@@ -82,9 +79,6 @@
                 type: 'GET',
                 url: "{{url('view_data_homenya')}}",
                 data: "id=id",
-                beforeSend: function(){
-                      $("#tampilkan_paslon").html('<center> Proses Data.............</center>');
-                },
                 success: function(msg){
                       $("#tampilkan_paslon").html(msg);
                     

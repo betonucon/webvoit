@@ -91,6 +91,7 @@ Route::group(['middleware'    => 'auth'],function(){
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/', 'HomeController@index');
     Route::get('/evote', 'HomeController@pilih');
+    Route::get('/evote-load', 'HomeController@pilih_load');
 });
 
 
