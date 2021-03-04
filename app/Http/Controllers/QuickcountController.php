@@ -165,7 +165,7 @@ class QuickcountController extends Controller
         }else{
             $data               = new Quickcount;
             $data->username     = Auth::user()['username'];
-            $data->kode_group     = $cek['kode_group'];
+            $data->kode_group     = cek_kode_group();
             $data->pemilihan_id     = $cek['pemilihan_id'];
             $data->detailpemilihan_id     = $cek['id'];
             $data->nik     = $cek['nik'];

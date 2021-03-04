@@ -360,10 +360,10 @@ class PemilihanController extends Controller
 
     public function view_data_paslon(request $request){
         if(Auth::user()['role_id']=='1'){
-            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',$request->kode_group)->orderBy('nomor','Asc')->get();
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',$request->kode_group)->orderBy('id','Asc')->get();
         }
         if(Auth::user()['role_id']=='3'){
-            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->orderBy('nomor','Asc')->get();
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->orderBy('id','Asc')->get();
         }
         
         echo'

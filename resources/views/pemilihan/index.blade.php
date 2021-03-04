@@ -225,6 +225,7 @@
         function tambah_paslon(a){
             $('#pemilihan_id').val(a);
             var kode_group=$('#kode_group').val();
+            
             $('#modalpaslon').modal({backdrop: 'static', keyboard: false});
             $.ajax({
                type: 'GET',
@@ -320,11 +321,10 @@
                url: "{{url('pemilihan/hapus_paslon')}}",
                data: "nik="+nik+"&pemilihan_id="+id,
                success: function(msg){
-                var kode_group=$('#kode_group').val();
                   $.ajax({
                       type: 'GET',
                       url: "{{url('pemilihan/view_data_paslon')}}",
-                      data: "id="+msg+"&kode_group="+kode_group
+                      data: "id="+msg+"&kode_group="+kode_group,
                       beforeSend: function(){
                             $("#tampilpaslon").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
                       },
