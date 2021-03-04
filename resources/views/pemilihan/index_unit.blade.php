@@ -39,6 +39,10 @@
                       <label>Nama</label>
                       <input type="text" class="form-control" id="nama" >
                     </div>
+                    <div class="form-group" style="margin-bottom:0px">
+                      <label>Nomor Paslon</label>
+                      <input type="text" class="form-control" name="no" >
+                    </div>
                     
                 </form><br>
                 <span  class="btn btn-default btn-sm" onclick="tutup()" id="tutup">Tutup</span>

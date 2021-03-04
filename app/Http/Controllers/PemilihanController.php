@@ -92,7 +92,7 @@ class PemilihanController extends Controller
                                     <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
                                 </div>
                                 <div class="nama_user">
-                                    PILIHAN LAIN<br>
+                                    ABSTEN<br>
                                     '.$det['nik'].'
                                 </div>
                                 <div class="nama_user_no">
@@ -701,6 +701,7 @@ class PemilihanController extends Controller
                 $data                   = New Detailpemilihan;
                 $data->pemilihan_id     = $request->pemilihan_id;
                 $data->nik              = $request->nik;
+                $data->no              = $request->no;
                 $data->kode_group        = cek_pengguna($request->nik)->detailgroup['kode_group'];
                 $data->save();
 

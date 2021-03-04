@@ -157,7 +157,7 @@ function title(){
     $data=App\Pemilihan::where('sts',1)->count();
     if($data>0){
         $cek=App\Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
-        $title=$cek['name'].'<br>Periode '.$cek['periode'];
+        $title=$cek['name'].'<br>'.cek_name_group().'<br> Periode '.$cek['periode'];
     }else{
         $title='SKKS (Serikat Karyawan Krakatau Steel)';
     }
