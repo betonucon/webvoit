@@ -9,6 +9,12 @@
           </div>
           <div class="box-header with-border">
             <span class="btn btn-primary btn-sm" onclick="tambah()">Tambah</span>
+            <select id="kode_group" class="form-control" style="width:40%" onchange="cari_kode(this.value)">
+                <option value="">PILIH UNIT SKKS</option>
+                @foreach(group() as $group)
+                  <option value="{{$group['kode_group']}}">{{$group['name']}}</option>
+                @endforeach
+            </select>
           </div>
           <div class="box-body">
               
@@ -326,6 +332,20 @@
                       }
                   });
               }
+           });
+        }
+        function cari_kode(a){
+          $.ajax({
+               type: 'GET',
+               url: "{{url('pemilihan/view_data')}}",
+               data: "kode_group="+a,
+               beforeSend: function(){
+                    $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
+               },
+               success: function(msg){
+                    $("#tabeldata").html(msg);
+                  
+               }
            });
         }
         function aktif(a){

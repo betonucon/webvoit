@@ -477,7 +477,7 @@ class PemilihanController extends Controller
         ';
 
         foreach($data as $no=>$o){
-            $detail=Detailpemilihan::where('pemilihan_id',$o['id'])->get();
+            $detail=Detailpemilihan::where('pemilihan_id',$o['id'])->where('kode_group',$request->kode_group)->get();
             if($o['kat']==1){$color="#f4f4f7";$evot='<span class="btn btn-default btn-xs"><i class="fa fa-users"></i></span>';}
             if($o['kat']==2){$color="#fff";$evot='<span class="btn btn-xs btn-success" onclick="tambah_voters('.$o['id'].')"><i class="fa fa-users"></i></span>';}
             echo'
@@ -488,7 +488,7 @@ class PemilihanController extends Controller
                     <td>';
                         foreach($detail as $no=>$det){
                             if(($no+1)%2==0){$color='success';}else{$color='primary';}
-                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
+                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;float:left">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
                         }
                     echo'
                     </td>
@@ -562,7 +562,7 @@ class PemilihanController extends Controller
                     <td>';
                         foreach($detail as $no=>$det){
                             if(($no+1)%2==0){$color='success';}else{$color='primary';}
-                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
+                            echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;float:left">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
                         }
                     echo'
                     </td>';

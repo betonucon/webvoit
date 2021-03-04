@@ -28,8 +28,7 @@ class HomeController extends Controller
         
         
         if(Auth::user()['role_id']==1){
-            $menu='Home';
-            return view('home_admin',compact('menu'));
+            return redirect('/');
         }
         if(Auth::user()['role_id']==3){
             $menu='Home';
