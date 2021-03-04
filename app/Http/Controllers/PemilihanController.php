@@ -86,7 +86,7 @@ class PemilihanController extends Controller
                         echo'
                             <div class="colom-25">
                                 <div class="nomor_user">
-                                NO '.($no+1).' 
+                                &nbsp;
                                 </div>
                                 <div class="img_user">
                                     <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
@@ -105,7 +105,7 @@ class PemilihanController extends Controller
                         echo'
                             <div class="colom-25">
                                 <div class="nomor_user">
-                                NO '.($no+1).' 
+                                NO '.$det['nomor'].'  
                                 </div>
                                 <div class="img_user">
                                     <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
@@ -128,7 +128,7 @@ class PemilihanController extends Controller
                         echo'
                             <div class="colom-25">
                                 <div class="nomor_user">
-                                NO '.($no+1).' 
+                                &nbsp;
                                 </div>
                                 <div class="img_user">
                                     <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
@@ -157,7 +157,7 @@ class PemilihanController extends Controller
                         echo'
                             <div class="colom-25">
                                 <div class="nomor_user">
-                                NO '.($no+1).' 
+                                NO '.$det['nomor'].' 
                                 </div>
                                 <div class="img_user">
                                     <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
