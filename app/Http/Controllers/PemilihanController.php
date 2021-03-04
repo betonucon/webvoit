@@ -686,6 +686,7 @@ class PemilihanController extends Controller
                     $pass->pemilihan_id     = $data['id'];
                     $pass->nik              = 999999;
                     $pass->kode_group       = 101;
+                    $pass->nomor            = 99;
                     $pass->save();
 
                     echo'ok';

@@ -320,10 +320,11 @@
                url: "{{url('pemilihan/hapus_paslon')}}",
                data: "nik="+nik+"&pemilihan_id="+id,
                success: function(msg){
+                var kode_group=$('#kode_group').val();
                   $.ajax({
                       type: 'GET',
                       url: "{{url('pemilihan/view_data_paslon')}}",
-                      data: "id="+msg,
+                      data: "id="+msg+"&kode_group="+kode_group
                       beforeSend: function(){
                             $("#tampilpaslon").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
                       },
@@ -450,10 +451,11 @@
                     success: function(msg){
                       var data=msg.split('@');
                         if(data[0]=='ok'){
+                            var kode_group=$('#kode_group').val();
                             $.ajax({
                                 type: 'GET',
                                 url: "{{url('pemilihan/view_data_paslon')}}",
-                                data: "id="+data[1],
+                                data: "id="+data[1]+"&kode_group="+kode_group,
                                 beforeSend: function(){
                                       $("#tampilpaslon").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
                                 },

@@ -34,7 +34,7 @@
       @if(Auth::user()['role_id']==3)
         <li><a href="{{url('evote')}}" target="_blank"><i class="fa fa-folder"></i> <span>E-vote</span></a></li>
         <li><a href="{{url('pengguna_unit')}}"><i class="fa fa-folder"></i> <span>User [{{cek_name_group()}}]</span></a></li>
-        <li><a href="{{url('pemilihan_unit')}}"><i class="fa fa-folder"></i> <span>Daftar E-vote</span></a></li>
+        <!-- <li><a href="{{url('pemilihan_unit')}}"><i class="fa fa-folder"></i> <span>Daftar E-vote</span></a></li> -->
         <li><a href="{{url('quickcount')}}"><i class="fa fa-folder"></i> <span>Quickcount</span></a></li>
       @endif  
       </ul>
