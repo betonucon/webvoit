@@ -92,8 +92,8 @@ class PemilihanController extends Controller
                                     <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
                                 </div>
                                 <div class="nama_user">
-                                    ABSTEN<br>
-                                    initial
+                                    ABSTAIN<br>
+                                    &nbsp;
                                 </div>
                                 <div class="nama_user_no">
                                     
@@ -134,8 +134,8 @@ class PemilihanController extends Controller
                                     <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
                                 </div>
                                 <div class="nama_user">
-                                    ABSTEN<br>
-                                    initial
+                                    ABSTAIN<br>
+                                    &nbsp;
                                 </div>';
                                 if($det->pemilihan['mulai']==1){
                                     if(cek_pemilihan($cek['id'])>0){
@@ -360,10 +360,10 @@ class PemilihanController extends Controller
 
     public function view_data_paslon(request $request){
         if(Auth::user()['role_id']=='1'){
-            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->get();
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',$request->kode_group)->orderBy('no','Asc')->get();
         }
         if(Auth::user()['role_id']=='3'){
-            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->get();
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->orderBy('no','Asc')->get();
         }
         
         echo'
@@ -392,7 +392,7 @@ class PemilihanController extends Controller
         foreach($data as $no=>$o){
             echo'
                 <tr>
-                    <td>'.($no+1).'</td>
+                    <td>'.$o['no'].'</td>
                     <td>'.$o['nik'].'</td>
                     <td>'.$o['pengguna']['name'].'</td>
                     <td>'.cek_unit($o->pengguna['kode_unit']).'</td>
@@ -698,6 +698,7 @@ class PemilihanController extends Controller
         
         if (trim($request->pemilihan_id) == '') {$error[] = '-Isi id terlebih dahulu';}
         if (trim($request->nik) == '') {$error[] = '-Isi NIK terlebih dahulu';}
+        if (trim($request->no) == '') {$error[] = '-Isi Nomor Urut terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             

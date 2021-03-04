@@ -162,7 +162,7 @@
                       <label >NIK</label>
                       <input type="text" style="width:20%" id="text_voters" class="form-control" onkeyup="cari_nik_voters(this.value)"  placeholder="Masukan NIK">
                       <input type="hidden" style="width:20%" class="form-control" id="nik_voters" name="nik" placeholder="Masukan NIK">
-                      
+                      <input type="number" style="width:20%;display:inline" placeholder="Nomor Urut" class="form-control" name="no" >
                     </div>
                     <div class="form-group" style="margin-bottom:0px">
                       <label>Nama</label>
@@ -224,11 +224,12 @@
         }
         function tambah_paslon(a){
             $('#pemilihan_id').val(a);
+            var kode_group=$('#kode_group').val();
             $('#modalpaslon').modal({backdrop: 'static', keyboard: false});
             $.ajax({
                type: 'GET',
                url: "{{url('pemilihan/view_data_paslon')}}",
-               data: "id="+a,
+               data: "id="+a+"&kode_group="+kode_group,
                beforeSend: function(){
                     $("#tampilpaslon").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
                },
