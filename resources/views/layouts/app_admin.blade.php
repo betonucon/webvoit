@@ -244,7 +244,7 @@
           <h1>
             {{$menu}}
             @if($menu=='E-vote' || $menu=='Home')
-            <small style="color:yellow">{{$namaevote}} SKKS (Serikat Karyawan Krakatau Steel)</small>
+            <small style="color:yellow">{!!$namaevote!!} SKKS (Serikat Karyawan Krakatau Steel)</small>
             @else
             <small style="color:yellow">SKKS (Serikat Karyawan Krakatau Steel)</small>
             @endif
