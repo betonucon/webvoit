@@ -72,10 +72,10 @@ class PemilihanController extends Controller
         $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
         if($cek['kat']==1){
             if(Auth::user()['role_id']==3){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('no','Asc')->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nomor','Asc')->get();
             }
             if(Auth::user()['role_id']==2){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('no','Asc')->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nomor','Asc')->get();
             }
             if(Auth::user()['role_id']==1){
                 $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
@@ -360,10 +360,10 @@ class PemilihanController extends Controller
 
     public function view_data_paslon(request $request){
         if(Auth::user()['role_id']=='1'){
-            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',$request->kode_group)->orderBy('no','Asc')->get();
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',$request->kode_group)->orderBy('nomor','Asc')->get();
         }
         if(Auth::user()['role_id']=='3'){
-            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->orderBy('no','Asc')->get();
+            $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->id)->where('kode_group',cek_kode_group())->orderBy('nomor','Asc')->get();
         }
         
         echo'
@@ -392,7 +392,7 @@ class PemilihanController extends Controller
         foreach($data as $no=>$o){
             echo'
                 <tr>
-                    <td>'.$o['no'].'</td>
+                    <td>'.$o['nomor'].'</td>
                     <td>'.$o['nik'].'</td>
                     <td>'.$o['pengguna']['name'].'</td>
                     <td>'.cek_unit($o->pengguna['kode_unit']).'</td>
@@ -702,15 +702,15 @@ class PemilihanController extends Controller
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             
-            $cek=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',$request->nik)->orWhare('no',$request->no)->count();
+            $cek=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',$request->nik)->orWhare('nomor',$request->no)->count();
             if($cek>0){
                 echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> NIK atau nomor urut sudah terdaftar calon pemilihan ini</p>';
             }else{
                 $data                   = New Detailpemilihan;
                 $data->pemilihan_id     = $request->pemilihan_id;
                 $data->nik              = $request->nik;
-                $data->no              = $request->no;
-                $data->kode_group        = cek_pengguna($request->nik)->detailgroup['kode_group'];
+                $data->nomor            = $request->no;
+                $data->kode_group       = cek_pengguna($request->nik)->detailgroup['kode_group'];
                 $data->save();
 
                 if($data){

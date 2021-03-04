@@ -123,7 +123,7 @@
                     @csrf
                     <input type="hidden" name="pemilihan_id" id="pemilihan_id">
                     <div class="form-group" style="margin-bottom:0px">
-                      <label >NIK</label>
+                      <label >NIK</label><br>
                       <input type="text" style="width:20%;display:inline" id="text" class="form-control" onkeyup="cari_nik(this.value)"  placeholder="Masukan NIK">
                       <input type="hidden" style="width:20%" class="form-control" id="nik" name="nik" placeholder="Masukan NIK">
                       <input type="number" style="width:20%;display:inline" placeholder="Nomor Urut" class="form-control" name="no" >
