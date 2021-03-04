@@ -126,7 +126,8 @@
                       <label >NIK</label>
                       <input type="text" style="width:20%" id="text" class="form-control" onkeyup="cari_nik(this.value)"  placeholder="Masukan NIK">
                       <input type="hidden" style="width:20%" class="form-control" id="nik" name="nik" placeholder="Masukan NIK">
-                      
+                      <input type="number" style="width:20%;display:inline" placeholder="Nomor Urut" class="form-control" name="no" >
+                    
                     </div>
                     <div class="form-group" style="margin-bottom:0px">
                       <label>Nama</label>
@@ -162,7 +163,6 @@
                       <label >NIK</label>
                       <input type="text" style="width:20%" id="text_voters" class="form-control" onkeyup="cari_nik_voters(this.value)"  placeholder="Masukan NIK">
                       <input type="hidden" style="width:20%" class="form-control" id="nik_voters" name="nik" placeholder="Masukan NIK">
-                      <input type="number" style="width:20%;display:inline" placeholder="Nomor Urut" class="form-control" name="no" >
                     </div>
                     <div class="form-group" style="margin-bottom:0px">
                       <label>Nama</label>
