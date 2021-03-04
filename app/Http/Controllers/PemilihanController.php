@@ -702,7 +702,7 @@ class PemilihanController extends Controller
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             
-            $cek=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',$request->nik)->orWhare('nomor',$request->no)->count();
+            $cek=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',$request->nik)->orWhere('nomor',$request->no)->count();
             if($cek>0){
                 echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> NIK atau nomor urut sudah terdaftar calon pemilihan ini</p>';
             }else{
