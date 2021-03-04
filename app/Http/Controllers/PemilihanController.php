@@ -72,10 +72,10 @@ class PemilihanController extends Controller
         $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
         if($cek['kat']==1){
             if(Auth::user()['role_id']==3){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nik','Asc')->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('no','Asc')->get();
             }
             if(Auth::user()['role_id']==2){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nik','Asc')->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('no','Asc')->get();
             }
             if(Auth::user()['role_id']==1){
                 $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
@@ -93,7 +93,7 @@ class PemilihanController extends Controller
                                 </div>
                                 <div class="nama_user">
                                     ABSTEN<br>
-                                    '.$det['nik'].'
+                                    initial
                                 </div>
                                 <div class="nama_user_no">
                                     
@@ -134,8 +134,8 @@ class PemilihanController extends Controller
                                     <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
                                 </div>
                                 <div class="nama_user">
-                                PILIHAN LAIN<br>
-                                '.$det['nik'].'
+                                    ABSTEN<br>
+                                    initial
                                 </div>';
                                 if($det->pemilihan['mulai']==1){
                                     if(cek_pemilihan($cek['id'])>0){
@@ -565,8 +565,15 @@ class PemilihanController extends Controller
                             echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].'</span>';
                         }
                     echo'
-                    </td>
-                    <td><span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['id'].')"><i class="fa fa-users"></i></span></td>
+                    </td>';
+                    if($o['mulai']==0){
+                        echo'<td><span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['id'].')"><i class="fa fa-users"></i></span></td>';
+                    
+                    }else{
+                        echo'<td><span class="btn btn-default btn-xs" ><i class="fa fa-users"></i></span></td>';
+                    }
+                    
+                    echo'
                     <td>';
                         if($o['sts']==0){
                             echo'<span class="btn btn-default btn-xs" ><i class="fa fa-remove"></i> Off</span>';
@@ -694,9 +701,9 @@ class PemilihanController extends Controller
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             
-            $cek=Detailpemilihan::where('nik',$request->nik)->where('pemilihan_id',$request->pemilihan_id)->count();
+            $cek=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',$request->nik)->orWhare('no',$request->no)->count();
             if($cek>0){
-                echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> NIK sudah terdaftar calon pemilihan ini</p>';
+                echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> NIK atau nomor urut sudah terdaftar calon pemilihan ini</p>';
             }else{
                 $data                   = New Detailpemilihan;
                 $data->pemilihan_id     = $request->pemilihan_id;

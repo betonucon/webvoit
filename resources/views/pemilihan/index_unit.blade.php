@@ -31,18 +31,15 @@
                     <input type="hidden" name="pemilihan_id" id="pemilihan_id">
                     <div class="form-group" style="margin-bottom:0px">
                       <label >NIK</label>
-                      <input type="text" style="width:20%" id="text" class="form-control" onkeyup="cari_nik(this.value)"  placeholder="Masukan NIK">
+                      <input type="text" style="width:20%;display:inline" id="text" class="form-control" onkeyup="cari_nik(this.value)"  placeholder="Masukan NIK">
                       <input type="hidden" style="width:20%" class="form-control" id="nik" name="nik" placeholder="Masukan NIK">
-                      
+                      <input type="number" style="width:20%;display:inline" placeholder="Nomor Urut" class="form-control" name="no" >
                     </div>
                     <div class="form-group" style="margin-bottom:0px">
                       <label>Nama</label>
                       <input type="text" class="form-control" id="nama" >
                     </div>
-                    <div class="form-group" style="margin-bottom:0px">
-                      <label>Nomor Paslon</label>
-                      <input type="text" class="form-control" name="no" >
-                    </div>
+                    
                     
                 </form><br>
                 <span  class="btn btn-default btn-sm" onclick="tutup()" id="tutup">Tutup</span>
