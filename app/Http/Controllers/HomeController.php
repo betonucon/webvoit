@@ -39,6 +39,7 @@ class HomeController extends Controller
             $cekaktif=Pemilihan::where('sts',1)->orderBy('id','desc')->count();
             if($cekaktif>0){
                 $menu='E-vote';
+                $namaevote=title();
                 return view('home',compact('menu','namaevote'));
             }else{
                 return view('blank');

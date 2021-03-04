@@ -11,7 +11,7 @@
             }
 </style>
 @section('content')
-    <section class="content" id="section">
+    <section class="content" id="section" style="display:flex">
         <div id="tampilkandata"></div>
         
     </section>

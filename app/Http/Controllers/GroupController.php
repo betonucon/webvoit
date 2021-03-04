@@ -24,29 +24,29 @@ class GroupController extends Controller
     
     public function tampilkan_group(request $request){
         $data=Group::orderBy('name','Asc')->get();
-        foreach($data as $no=>$o){
-            if(($no+1)%2==0){$color="aqua";}else{$color="red";}
-                echo'
-                <div class="col-md-4">
-                    <div class="info-box bg-'.$color.'">
-                        <span class="info-box-icon" style="padding-top: 5%;"><i class="fa fa-group"></i></span>
-        
-                        <div class="info-box-content">
-                            <span class="info-box-text">'.$o['name'].'</span>
-                            <span class="info-box-number">'.total_pengguna($o['kode_group']).' Orang</span>
+            foreach($data as $no=>$o){
+                if(($no+1)%2==0){$color="aqua";}else{$color="red";}
+                    echo'
+                    <div class="col-md-4">
+                        <div class="info-box bg-'.$color.'">
+                            <span class="info-box-icon" style="padding-top: 5%;"><i class="fa fa-group"></i></span>
             
-                            <div class="progress">
-                            <div class="progress-bar" style="width: 40%"></div>
+                            <div class="info-box-content">
+                                <span class="info-box-text">'.$o['name'].'</span>
+                                <span class="info-box-number">'.total_pengguna($o['kode_group']).' Orang</span>
+                
+                                <div class="progress">
+                                <div class="progress-bar" style="width: 40%"></div>
+                                </div>
+                                <span class="progress-description">
+                                Keseluruhan Anggota '.semua_total_pengguna().' Orang 
+                                </span>
                             </div>
-                            <span class="progress-description">
-                               Keseluruhan Anggota '.semua_total_pengguna().' Orang 
-                            </span>
                         </div>
                     </div>
-                </div>
 
-                ';
-        }
+                    ';
+            }
     }
     public function hapus(request $request){
         $hapus=Group::where('id',$request->id)->delete();
@@ -163,9 +163,9 @@ class GroupController extends Controller
     public function view_data_unit(request $request){
         $cek=strlen($request->text);
         if($cek>0){
-            $data=Unit::where('name','LIKE','%'.$request->text.'%')->orWhere('kode_unit','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->paginate(50);
+            $data=Unit::where('name','LIKE','%'.$request->text.'%')->orWhere('kode_unit','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->get();
         }else{
-            $data=Unit::orderBy('name','Asc')->paginate(50);
+            $data=Unit::orderBy('name','Asc')->get();
         }
         
         echo'
