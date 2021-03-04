@@ -85,9 +85,9 @@ class PenggunaController extends Controller
     public function view_data(request $request){
         $cek=strlen($request->text);
         if($cek>0){
-            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->text.'%')->orWhere('name','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->paginate(200);
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->text.'%')->orWhere('name','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->get();
         }else{
-            $data=Pengguna::with(['detailgroup'])->orderBy('name','Asc')->paginate(200);
+            $data=Pengguna::with(['detailgroup'])->orderBy('name','Asc')->get();
         }
         echo'
             <style>
@@ -131,9 +131,9 @@ class PenggunaController extends Controller
     public function view_data_unit(request $request){
         $cek=strlen($request->text);
         if($cek>0){
-            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->text.'%')->orWhere('name','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->paginate(200);
+            $data=Detailgroup::with(['pengguna'])->where('kode_group',cek_kode_group())->where('nik','LIKE','%'.$request->text.'%')->orderBy('nik','Asc')->get();
         }else{
-            $data=Pengguna::with(['detailgroup'])->orderBy('name','Asc')->paginate(200);
+            $data=Detailgroup::with(['pengguna'])->where('kode_group',cek_kode_group())->orderBy('nik','Asc')->get();
         }
         echo'
             <style>
@@ -144,6 +144,7 @@ class PenggunaController extends Controller
             </style>
             <table width="100%" class="table table-bordered table-hover dataTable">
                 <tr>
+                    <th width="5%">No</th>
                     <th width="10%">NIK</th>
                     <th>Nama</th>
                     <th>Area Kerja</th>
@@ -154,13 +155,13 @@ class PenggunaController extends Controller
         ';
 
         foreach($data as $no=>$o){
-            if($o['detailgroup']['kode_group']==cek_kode_group() && $o['detailgroup']['kode_group']!=''){
             echo'
                 <tr>
+                    <td>'.($no+1).'</td>
                     <td>'.$o['nik'].'</td>
-                    <td>'.$o['name'].'</td>
-                    <td>'.cek_unit($o['kode_unit']).'</td>
-                    <td>'.cek_groupnya($o['detailgroup']['kode_group']).'</td>';
+                    <td>'.$o['pengguna']['name'].'</td>
+                    <td>'.cek_unit($o['pengguna']['kode_unit']).'</td>
+                    <td>'.cek_groupnya($o['kode_group']).'</td>';
                     if(Auth::user()['username']==$o['nik']){
                         echo'
                         <td>
@@ -179,9 +180,7 @@ class PenggunaController extends Controller
                 </tr>
 
             ';
-            }else{
-                
-            }
+            
         }
 
         echo'</table>';
