@@ -9,7 +9,7 @@
           </div>
           <div class="box-header with-border">
             <span class="btn btn-primary btn-sm" onclick="tambah()">Tambah</span>
-            <select id="kode_group" class="form-control" style="width:40%" onchange="cari_kode(this.value)">
+            <select id="kode_group" class="form-control" style="width:40%;display:inline;margin-left:2%" onchange="cari_kode(this.value)">
                 <option value="">PILIH UNIT SKKS</option>
                 @foreach(group() as $group)
                   <option value="{{$group['kode_group']}}">{{$group['name']}}</option>
@@ -126,7 +126,7 @@
                       <label >NIK</label><br>
                       <input type="text" style="width:20%;display:inline" id="text" class="form-control" onkeyup="cari_nik(this.value)"  placeholder="Masukan NIK">
                       <input type="hidden" style="width:20%" class="form-control" id="nik" name="nik" placeholder="Masukan NIK">
-                      <input type="number" style="width:20%;display:inline" placeholder="Nomor Urut" class="form-control" name="no" >
+                      <input type="number" style="width:20%;display:inline" placeholder="Nomor Urut" class="form-control" name="nomor" >
                     
                     </div>
                     <div class="form-group" style="margin-bottom:0px">
@@ -287,11 +287,11 @@
             
         }
         function cari_nik(a){
-           
+          var kode_group=$('#kode_group').val();
            $.ajax({
                type: 'GET',
-               url: "{{url('unit/cari_nik')}}",
-               data: "id="+a,
+               url: "{{url('unit/cari_nik_group')}}",
+               data: "id="+a+"&kode_group="+kode_group,
                success: function(msg){
                    var data=msg.split('@');
                    $('#nama').val(data[1]);

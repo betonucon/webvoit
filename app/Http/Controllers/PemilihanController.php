@@ -699,18 +699,18 @@ class PemilihanController extends Controller
         
         if (trim($request->pemilihan_id) == '') {$error[] = '-Isi id terlebih dahulu';}
         if (trim($request->nik) == '') {$error[] = '-Isi NIK terlebih dahulu';}
-        if (trim($request->no) == '') {$error[] = '-Isi Nomor Urut terlebih dahulu';}
+        if (trim($request->nomor) == '') {$error[] = '-Isi Nomor Urut terlebih dahulu';}
         if (isset($error)) {echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br />'.implode('<br />', $error).'</p>';} 
         else{
             
-            $cek=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',$request->nik)->orWhere('nomor',$request->no)->count();
+            $cek=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',$request->nik)->count();
             if($cek>0){
                 echo '<p style="padding:5px;background:#d1ffae;font-size:12px"><b>Error</b>: <br /> NIK atau nomor urut sudah terdaftar calon pemilihan ini</p>';
             }else{
                 $data                   = New Detailpemilihan;
                 $data->pemilihan_id     = $request->pemilihan_id;
                 $data->nik              = $request->nik;
-                $data->nomor            = $request->no;
+                $data->nomor            = $request->nomor;
                 $data->kode_group       = cek_pengguna($request->nik)->detailgroup['kode_group'];
                 $data->save();
 
@@ -721,6 +721,7 @@ class PemilihanController extends Controller
             }
         }
     }
+    
     public function simpan_voters(request $request){
         
         if (trim($request->pemilihan_id) == '') {$error[] = '-Isi id terlebih dahulu';}

@@ -41,6 +41,21 @@ class UnitController extends Controller
         
 
     }
+    public function cari_nik_group(request $request){
+        
+            $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();
+            if($data['detailgroup']['kode_group']==$request->kode_group){
+                echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+            }else{
+                if($data['detailgroup']['kode_group']==''){
+                    echo $data['nik'].'@['.$data['nik'].']'.$data['name'].' '.cek_unit($data['kode_unit']);
+                }else{
+
+                }
+            }
+            
+        
+    }
     public function cari_nik_pengguna(request $request){
         if(Auth::user()['role_id']==1){
             $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->id.'%')->orWhere('name','LIKE','%'.$request->id.'%')->first();

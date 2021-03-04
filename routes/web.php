@@ -42,6 +42,7 @@ Route::group(['middleware'    => 'auth'],function(){
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/unit','UnitController@index');
     Route::get('/unit/cari_nik','UnitController@cari_nik');
+    Route::get('/unit/cari_nik_group','UnitController@cari_nik_group');
     Route::get('/unit/cari_nik_pengguna','UnitController@cari_nik_pengguna');
     Route::get('/unit/hapus','UnitController@hapus');
     Route::get('/unit/ubah','UnitController@ubah');
