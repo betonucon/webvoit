@@ -25,6 +25,7 @@ class PenggunaController extends Controller
 
         return view('pengguna.index',compact('menu'));
     }
+    
     public function index_unit(request $request){
         $menu='Pengguna '.cek_name_group();
         if(Auth::user()['role_id']==3){
@@ -145,7 +146,7 @@ class PenggunaController extends Controller
             <table width="100%" class="table table-bordered table-hover dataTable">
                 <tr>
                     <th width="5%">No</th>
-                    <th width="10%">NIK</th>
+                    <th width="10%">NIKdd</th>
                     <th>Nama</th>
                     <th>Area Kerja</th>
                     <th>Unit SKKS</th>

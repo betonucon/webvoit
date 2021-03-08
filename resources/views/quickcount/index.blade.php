@@ -33,6 +33,11 @@
     <div class="modal fade" id="modalpaslon">
       <div class="modal-dialog modal-lg" style="width:85%;margin-top:0px">
         <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span></button>
+            
+          </div>
           <div class="modal-body" style="display: flow-root;">
                 
                 <div id="tampilpaslon" style="padding:1%"></div>
@@ -110,6 +115,28 @@
                   
                }
            });
+        }
+        function hasil_paslon(a,kode){
+            
+            
+            if(kode==''){
+                alert('Pilih Unit SKKS');
+            }else{
+                $('#modalpaslon').modal('show');
+                $.ajax({
+                    type: 'GET',
+                    url: "{{url('quickcount/grafik')}}",
+                    data: "pemilihan_id="+a+"&kode_group="+kode,
+                    beforeSend: function(){
+                            $("#tampilpaslon").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
+                    },
+                    success: function(msg){
+                            $("#tampilpaslon").html(msg);
+                        
+                    }
+                });
+            }
+            
         }
         
         

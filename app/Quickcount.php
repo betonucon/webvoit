@@ -18,6 +18,10 @@ class Quickcount extends Model
     {
         return $this->belongsTo('App\Pengguna','nik','nik');
     }
+    public function penggunaan()
+    {
+        return $this->belongsTo('App\Pengguna','username','nik');
+    }
     public function pemilih()
     {
         return $this->belongsTo('App\Pengguna','username','nik');

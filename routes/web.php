@@ -18,9 +18,9 @@ Route::get('login_skks/', function () {
     return view('auth.login');
 });
 
-// Route::post('login', 'Auth\LoginController@login')->name('login');
-// Route::post('register', 'Auth\LoginController@login')->name('register');
-// Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('login', 'Auth\LoginController@login')->name('login');
+Route::post('register', 'Auth\LoginController@login')->name('register');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('a/{personnel_no}/', 'Auth\LoginController@programaticallyEmployeeLogin')->name('login.a');
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/view_data_homenya','PemilihanController@view_data_vote');
@@ -93,6 +93,7 @@ Route::group(['middleware'    => 'auth'],function(){
 
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/quickcount', 'QuickcountController@index');
+    Route::get('/quickcount/grafik', 'QuickcountController@grafik');
     Route::get('/quickcount/view_data', 'QuickcountController@view_data');
     Route::get('/quickcount/hapus', 'QuickcountController@hapus');
     Route::get('/quickcount/view_data_hasil', 'QuickcountController@view_data_hasil');
@@ -106,6 +107,6 @@ Route::group(['middleware'    => 'auth'],function(){
 });
 
 
-Auth::routes();
+// Auth::routes();
 
 

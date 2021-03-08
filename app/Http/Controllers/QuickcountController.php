@@ -10,6 +10,7 @@ use App\Detailgroup;
 use App\Detailpemilihan;
 use App\Pemilihan;
 use App\User;
+use App\Group;
 use App\Voters;
 use App\Quickcount;
 use Illuminate\Support\Facades\Crypt;
@@ -24,6 +25,18 @@ class QuickcountController extends Controller
     public function hapus(request $request){
         $hapus=Quickcount::where('id',$request->id)->delete();
         echo $request->id.'@'.$request->kode_group;
+    }
+    public function grafik(request $request){
+        $menu='Grafik';
+        $pemilihan=Pemilihan::where('id',$request->pemilihan_id)->first();
+        $group=Group::where('kode_group',$request->kode_group)->first();
+        $data=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->pemilihan_id)->where('kode_group',$request->kode_group)->orWhere('kode_group','101')->orderBy('nomor','Asc')->get();
+        $rinci=Detailpemilihan::with(['pengguna'])->where('pemilihan_id',$request->pemilihan_id)->where('kode_group',$request->kode_group)->orWhere('kode_group','101')->orderBy('nomor','Asc')->get();
+        $voters=Quickcount::with(['pengguna'])->where('pemilihan_id',$request->pemilihan_id)->where('kode_group',$request->kode_group)->count();
+        $abstain=Quickcount::with(['pengguna'])->where('pemilihan_id',$request->pemilihan_id)->where('kode_group',$request->kode_group)->where('nik',999999)->count();
+        $hakpilih=Detailgroup::where('kode_group',$request->kode_group)->count();
+        $belum=$hakpilih-$voters;
+        return view('quickcount.grafik',compact('data','rinci','pemilihan','group','voters','hakpilih','abstain','belum'));
     }
     public function view_data_hasil(request $request){
         $data=Pemilihan::where('id',$request->pemilihan_id)->first();
@@ -47,13 +60,12 @@ class QuickcountController extends Controller
             
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="height:400px;overflow-y:scroll">
                             <div class="box-header with-border">
                                 <h3 class="box-title">Belum Melakukan Vote</h3>
 
                                 <div class="box-tools pull-right">
                                 
-                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                 </div>
                             </div>
                             <table width="100%" class="table-hover dataTable">
@@ -64,6 +76,7 @@ class QuickcountController extends Controller
                             if($data['kat']==2){
                                 $group=Voters::with(['pengguna'])->where('pemilihan_id',$request['pemilihan_id'])->get();
                                 foreach($group as $no=>$gr){
+                                    $no=1;
                                     if(cek_quickcount($request['pemilihan_id'],$gr['nik'])>0){
 
                                     }else{
@@ -80,7 +93,9 @@ class QuickcountController extends Controller
                             
                             if($data['kat']==1){
                                 $group=Detailgroup::with(['pengguna'])->where('kode_group',$request->kode_group)->get();
+                                $no=0;
                                 foreach($group as $no=>$gr){
+                                    
                                     if(cek_quickcount($request['pemilihan_id'],$gr['nik'])>0){
 
                                     }else{
@@ -98,40 +113,39 @@ class QuickcountController extends Controller
                             </table>
                         </div>
                         
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="height:400px;overflow-y:scroll">
                             <div class="box-header with-border">
                                 <h3 class="box-title">Sudah Melakukan Vote</h3>
 
-                                <div class="box-tools pull-right">
                                 
-                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                                </div>
                             </div>
                             <table width="100%" class="table-hover dataTable">
                                 <tr> 
                                     <th width="6%">NO</th>
                                     <th width="15%">NIK</th>
                                     <th>NAMA</th>
+                                    <th width="25%">Waktu</th>
                                     <th width="6%"></th>
                                 </tr> ';
                                 if(Auth::user()['role_id']==1){
                                     if($data['kat']==1){
-                                        $sudah=Quickcount::with(['pengguna'])->where('pemilihan_id',$request['pemilihan_id'])->where('kode_group',$request->kode_group)->get();
+                                        $sudah=Quickcount::with(['pengguna','penggunaan'])->where('pemilihan_id',$request['pemilihan_id'])->where('kode_group',$request->kode_group)->get();
                                     }
                                     if($data['kat']==2){
-                                        $sudah=Quickcount::with(['pengguna'])->where('pemilihan_id',$request['pemilihan_id'])->get();
+                                        $sudah=Quickcount::with(['pengguna','penggunaan'])->where('pemilihan_id',$request['pemilihan_id'])->get();
                                     }
                                 }
                                 if(Auth::user()['role_id']==3){
-                                    $sudah=Quickcount::with(['pengguna'])->where('pemilihan_id',$request['pemilihan_id'])->where('kode_group',cek_kode_group())->get();
+                                    $sudah=Quickcount::with(['pengguna','penggunaan'])->where('pemilihan_id',$request['pemilihan_id'])->where('kode_group',cek_kode_group())->get();
                                 }
                                 
                                 foreach($sudah as $no=>$sud){
                                     echo'
                                         <tr>
                                             <td>'.($no+1).'</td>
-                                            <td>'.$sud['nik'].'</td>
-                                            <td>'.$sud['pengguna']['name'].'</td>';
+                                            <td>'.$sud['username'].'</td>
+                                            <td>'.$sud['penggunaan']['name'].'</td>
+                                            <td>'.$sud['waktu'].'</td>';
                                             if(Auth::user()['role_id']==1){
                                                 echo'<td><span class="btn btn-danger btn-xs" onclick="hapus('.$sud['id'].',`'.$request->kode_group.'`)"><i class="fa fa-remove"></i></span></td>';
                                             }
@@ -196,6 +210,7 @@ class QuickcountController extends Controller
                     <th width="27%">Nama Pemilihan</th>
                     <th width="10%">Periode</th>
                     <th>Calon</th>
+                    <th width="4%">Quick</th>
                     <th width="4%">Pas</th>
                 </tr>
 
@@ -204,15 +219,15 @@ class QuickcountController extends Controller
         foreach($data as $no=>$o){
             if(Auth::user()['role_id']==1){
                 if($o['pemilihan']['kat']==1){
-                    $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',$request->kode_group)->orWhere('kode_group',101)->get();
+                    $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',$request->kode_group)->orWhere('kode_group',101)->where('nik','!=',999999)->get();
                 }
                 if($o['pemilihan']['kat']==2){
-                    $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->get();
+                    $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('nik','!=',999999)->get();
                 }
                 
             }
             if(Auth::user()['role_id']==3){
-                $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',cek_kode_group())->get();
+                $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',cek_kode_group())->where('nik','!=',999999)->get();
             }
             
             if($o['pemilihan']['kat']==2){$color="#f4f4f7";$evot='<span class="btn btn-default btn-xs"><i class="fa fa-users"></i></span>';}
@@ -227,19 +242,31 @@ class QuickcountController extends Controller
                             <td>';
                                 foreach($detail as $no=>$det){
                                     if(($no+1)%2==0){$color='success';}else{$color='primary';}
-                                    echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].' <span class="label label-warning">'.cek_hasil($det['nik'],$o['pemilihan_id'],$det['kode_group']).'</span></span>';
+                                    echo'['.$det['nomor'].']'.$det['pengguna']['name'].',';
                                 }
                             echo'
-                            </td>';
+                            </td>
+                            <td>';
+                            
                             if(Auth::user()['role_id']==1){ 
-                                echo'<td><span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['pemilihan_id'].',`'.$request->kode_group.'`)"><i class="fa fa-users"></i></span></td>';
+                                echo'<span class="btn btn-success btn-xs" onclick="hasil_paslon('.$o['pemilihan_id'].',`'.$request->kode_group.'`)"><i class="fa fa-users"></i></span>';
                             }
                             if(Auth::user()['role_id']==3){ 
-                                echo'<td><span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['pemilihan_id'].',`'.cek_kode_group().'`)"><i class="fa fa-users"></i></span></td>';
+                                echo'<span class="btn btn-success btn-xs" onclick="hasil_paslon('.$o['pemilihan_id'].',`'.cek_kode_group().'`)"><i class="fa fa-users"></i></span>';
+                            }
+                            echo'
+                            </td>
+                            <td>';
+                            if(Auth::user()['role_id']==1){ 
+                                echo'<span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['pemilihan_id'].',`'.$request->kode_group.'`)"><i class="fa fa-users"></i></span>';
+                            }
+                            if(Auth::user()['role_id']==3){ 
+                                echo'<span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['pemilihan_id'].',`'.cek_kode_group().'`)"><i class="fa fa-users"></i></span>';
                             }
                             
                             
                             echo'
+                            </td>
                         </tr>
 
                     ';
@@ -255,10 +282,11 @@ class QuickcountController extends Controller
                             <td>';
                                 foreach($detail as $no=>$det){
                                     if(($no+1)%2==0){$color='success';}else{$color='primary';}
-                                    echo'<span class="label label-'.$color.'" style="margin-right:1%;font-size:12px;">['.$det['nik'].'] '.cek_pengguna($det['nik'])['name'].' <span class="label label-warning">'.cek_hasil($det['nik'],$o['pemilihan_id'],$det['kode_group']).'</span></span>';
+                                    echo'['.$det['nomor'].']'.$det['pengguna']['name'].',';
                                 }
                             echo'
                             </td>
+                            <td><span class="btn btn-success btn-xs" onclick="hasil_paslon('.$o['pemilihan_id'].',`'.$request->kode_group.'`)"><i class="fa fa-clone"></i></span></td>
                             <td><span class="btn btn-primary btn-xs" onclick="tambah_paslon('.$o['pemilihan_id'].',`'.$request->kode_group.'`)"><i class="fa fa-clone"></i></span></td>
                             
                         </tr>

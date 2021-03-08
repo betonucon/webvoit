@@ -122,10 +122,15 @@ function semua_total_pengguna(){
     return $data;
 }
 function cek_hasil($nik,$pemilihan_id,$kode_group){
-    $data=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('nik',$nik)->count();
-    $jumlah_anggota=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('kode_group',$kode_group)->orWhere('kode_group',101)->count();
-    $total=round(($data*100)/$jumlah_anggota);
-    return $total.'%';
+    $data=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('kode_group',$kode_group)->where('nik',$nik)->count();
+    // $jumlah_anggota=App\Quickcount::where('pemilihan_id',$pemilihan_id)->where('kode_group',$kode_group)->orWhere('kode_group',101)->count();
+    // $total=round(($data*100)/$jumlah_anggota);
+    if($data>0){
+        $tam=$data;
+    }else{
+        $tam=0; 
+    }
+    return $tam;
 }
 function cek_name_group(){
     

@@ -172,7 +172,7 @@
            
           $.ajax({
                type: 'GET',
-               url: "{{url('pengguna/view_data')}}?text="+a,
+               url: "{{url('pengguna/view_data_unit')}}?text="+a,
                data: "id=id",
                beforeSend: function(){
                     $("#tabeldata").html('<center><img src="{{url('/img/loading.gif')}}" width="3%"> Proses Data.............</center>');
