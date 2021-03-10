@@ -218,12 +218,12 @@ class QuickcountController extends Controller
 
         foreach($data as $no=>$o){
             if(Auth::user()['role_id']==1){
-                if($o['pemilihan']['kat']==1){
+                // if($o['pemilihan']['kat']==1){
                     $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('kode_group',$request->kode_group)->orWhere('kode_group',101)->where('nik','!=',999999)->get();
-                }
-                if($o['pemilihan']['kat']==2){
-                    $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('nik','!=',999999)->get();
-                }
+                // }
+                // if($o['pemilihan']['kat']==2){
+                //     $detail=Detailpemilihan::where('pemilihan_id',$o['pemilihan_id'])->where('nik','!=',999999)->get();
+                // }
                 
             }
             if(Auth::user()['role_id']==3){
@@ -235,7 +235,7 @@ class QuickcountController extends Controller
             if(Auth::user()['role_id']==3){  
                 if($o['pemilihan']['kat']==1){      
                     echo'
-                        <tr bgcolor="'.$color.'">
+                        <tr bgcolor="">
                             <td></td>
                             <td>'.$o['pemilihan']['name'].' </td>
                             <td>'.$o['pemilihan']['periode'].'</td>
@@ -275,7 +275,7 @@ class QuickcountController extends Controller
                 }
             }else{
                     echo'
-                        <tr bgcolor="'.$color.'">
+                        <tr bgcolor="">
                             <td></td>
                             <td>'.$o['pemilihan']['name'].'</td>
                             <td>'.$o['pemilihan']['periode'].'</td>

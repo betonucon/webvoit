@@ -72,10 +72,16 @@ class PemilihanController extends Controller
         $cek=Pemilihan::where('sts',1)->orderBy('id','desc')->firstOrFail();
         if($cek['kat']==1){
             if(Auth::user()['role_id']==3){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nomor','Asc')->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where(function ($query) {
+                    $query->where('kode_group',cek_kode_group())
+                          ->orWhere('kode_group',101);
+                })->orderBy('nomor','Asc')->get();
             }
             if(Auth::user()['role_id']==2){
-                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where('kode_group',cek_kode_group())->orWhere('kode_group',101)->orderBy('nomor','Asc')->get();
+                $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->where(function ($query) {
+                    $query->where('kode_group',cek_kode_group())
+                          ->orWhere('kode_group',101);
+                })->orderBy('nomor','Asc')->get();
             }
             if(Auth::user()['role_id']==1){
                 $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
@@ -681,15 +687,19 @@ class PemilihanController extends Controller
                 $data->save();
 
                 if($data){
-                   
-                    $pass                   = New Detailpemilihan;
-                    $pass->pemilihan_id     = $data['id'];
-                    $pass->nik              = 999999;
-                    $pass->kode_group       = 101;
-                    $pass->nomor            = 99;
-                    $pass->save();
+                    $cekdet=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',999999)->count();
+                    if($cekdet>0){
+                        echo'ok';
+                    }else{
+                        $pass                   = New Detailpemilihan;
+                        $pass->pemilihan_id     = $data['id'];
+                        $pass->nik              = 999999;
+                        $pass->kode_group       = 101;
+                        $pass->nomor            = 99;
+                        $pass->save();
 
-                    echo'ok';
+                        echo'ok';
+                    }
                 }
             }
         }
