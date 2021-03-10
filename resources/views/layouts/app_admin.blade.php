@@ -106,8 +106,11 @@
       .nama_user{
         width:100%;
         padding:1%;
+        font-size:12px;
         border:solid 1px #dcbebe;
         font-weight:bold;
+        height:70px;
+        
         font-size:13px;
       }
       .nama_user_no{
@@ -146,6 +149,9 @@
         border:solid 1px #dcbebe;
         display: table;
       }
+      .kepala{
+        display:none;
+      }
       .imgnya{
         width:99%;
         margin-left:0.5%;
@@ -166,7 +172,9 @@
       }
       .nama_user{
         width:100%;
+        font-size:9px;
         padding:1%;
+        height:40px;
         border:solid 1px #dcbebe;
       }
       .centered {
