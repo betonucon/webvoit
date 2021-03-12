@@ -139,7 +139,7 @@ function cek_hasil($nik,$pemilihan_id,$kode_group){
 
 function cek_name_group(){
     
-    if(Auth::user()['role_id']==3){
+    if(Auth::user()['role_id']==3|| Auth::user()['role_id']==2){
         $data=App\Group::where('kode_group',cek_kode_group())->first();
         $kode=$data['name'];
     }else{
