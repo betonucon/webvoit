@@ -31,7 +31,7 @@
 
     
     <div class="modal fade" id="modalpaslon">
-      <div class="modal-dialog modal-lg" style="width:85%;margin-top:0px">
+      <div class="modal-dialog modal-lg" style="width:95%;margin-top:0px;margin-left:2.5%;">
         <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

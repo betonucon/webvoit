@@ -136,7 +136,7 @@
                                 <tr>
                                     <td>{{$r+1}}</td>
                                     <td>{{$nama}}</td>
-                                    <td><span class="badge bg-red">{{cek_hasil($rinci['nik'],$rinci['pemilihan_id'],$rinci['kode_group'])}}</span></td>
+                                    <td><span class="badge bg-red">{{cek_hasil($rinci['nik'],$rinci['pemilihan_id'],$group['kode_group'])}}</span></td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -252,7 +252,7 @@
                         }
                     ?>
 
-                    ['{{$tampil}}', {{cek_hasil($o['nik'],$o['pemilihan_id'],$o['kode_group'])}}],
+                    ['{{$tampil}}', {{cek_hasil($o['nik'],$o['pemilihan_id'],$group['kode_group'])}}],
                 @endforeach
             ],
             color: '#3c8dbc'
