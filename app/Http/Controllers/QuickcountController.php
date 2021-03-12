@@ -11,16 +11,22 @@ use App\Detailpemilihan;
 use App\Pemilihan;
 use App\User;
 use App\Group;
+use App\Statuspemilihan;
 use App\Voters;
 use App\Quickcount;
+use DB;
 use Illuminate\Support\Facades\Crypt;
 
 class QuickcountController extends Controller
 {
     public function index(request $request){
         $menu='Quickcount';
-
-        return view('quickcount.index',compact('menu'));
+        if(Auth::user()['role_id']==1 || Auth::user()['role_id']==3){
+            return view('quickcount.index',compact('menu'));
+        }else{
+            return view('404',compact('menu'));
+        }
+       
     }
     public function hapus(request $request){
         $hapus=Quickcount::where('id',$request->id)->delete();
@@ -36,7 +42,19 @@ class QuickcountController extends Controller
         $abstain=Quickcount::with(['pengguna'])->where('pemilihan_id',$request->pemilihan_id)->where('kode_group',$request->kode_group)->where('nik',999999)->count();
         $hakpilih=Detailgroup::where('kode_group',$request->kode_group)->count();
         $belum=$hakpilih-$voters;
-        return view('quickcount.grafik',compact('data','rinci','pemilihan','group','voters','hakpilih','abstain','belum'));
+        $hasilnya=Quickcount::with(['pengguna'])->select('nik', DB::raw('count(*) as total'))
+                    ->where('pemilihan_id',$request->pemilihan_id)
+                    ->where('kode_group',$request->kode_group)
+                    ->groupBy('nik')
+                    ->orderBy('total','Desc')
+                    ->paginate(1);
+        $hasilnya2=Quickcount::with(['pengguna'])->select('nik', DB::raw('count(*) as total'))
+                    ->where('pemilihan_id',$request->pemilihan_id)
+                    ->where('kode_group',$request->kode_group)
+                    ->groupBy('nik')
+                    ->orderBy('total','Desc')
+                    ->paginate(1);
+        return view('quickcount.grafik',compact('data','rinci','pemilihan','group','voters','hakpilih','abstain','belum','hasilnya','hasilnya2'));
     }
     public function view_data_hasil(request $request){
         $data=Pemilihan::where('id',$request->pemilihan_id)->first();
@@ -171,20 +189,38 @@ class QuickcountController extends Controller
 
         ';
     }
+    public function akhiri(request $request){
+        $data=Statuspemilihan::where('pemilihan_id',$request->pemilihan_id)->where('kode_group',$request->kode_group)->first();
+        if($data['sts']==1){
+            $pil    =Statuspemilihan::find($data['id']);
+            $pil->sts=2;
+            $pil->save();
+        }
+        if($data['sts']==2){
+            $pil    =Statuspemilihan::find($data['id']);
+            $pil->sts=1;
+            $pil->save();
+        }
+    }
+
     public function simpan(request $request){
         $cek=Detailpemilihan::where('id',$request->id)->first();
         $cek_pilih=Quickcount::where('pemilihan_id',$request->id)->where('username',Auth::user()['username'])->count();
         if($cek_pilih>0){
             
         }else{
-            $data               = new Quickcount;
-            $data->username     = Auth::user()['username'];
-            $data->kode_group     = cek_kode_group();
-            $data->pemilihan_id     = $cek['pemilihan_id'];
-            $data->detailpemilihan_id     = $cek['id'];
-            $data->nik     = $cek['nik'];
-            $data->waktu     = date('Y-m-d H:i:s');
-            $data->save();
+            if(stspemilihan($cek['pemilihan_id'],cek_kode_group())==1){
+                $data               = new Quickcount;
+                $data->username     = Auth::user()['username'];
+                $data->kode_group     = cek_kode_group();
+                $data->pemilihan_id     = $cek['pemilihan_id'];
+                $data->detailpemilihan_id     = $cek['id'];
+                $data->nik     = $cek['nik'];
+                $data->waktu     = date('Y-m-d H:i:s');
+                $data->save();
+            }else{
+                echo'Pemilihan Sudah Ditutup';
+            }
         }
             
     }

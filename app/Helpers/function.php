@@ -20,6 +20,10 @@ function group(){
     $data=App\Group::orderBy('name','Asc')->get();
     return $data;
 }
+function stspemilihan($id,$group){
+    $data=App\Statuspemilihan::where('kode_group',$group)->where('pemilihan_id',$id)->first();
+    return $data['sts'];
+}
 
 function cek_detail_group($group,$unit){
     $data=App\Detailgroup::where('kode_group',$group)->where('kode_unit',$unit)->count();

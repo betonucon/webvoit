@@ -14,14 +14,101 @@
   <link rel="stylesheet" href="{{url(link_html().'/dist/css/AdminLTE.min.css')}}">
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style>
+    @media only screen and (min-width: 650px) {
+        .colommenang{
+            width:30%;
+            text-align:center;
+            padding:1%;
+            margin-left:35%;
+            margin-top:10%;
+            margin-bottom:2%;
+            /* border:double 3px #000; */
+            display: table;
+        }
+        .judulmenang{
+            width:100%;
+            float:left;
+            text-align:left;
+            background:#e2f791;
+            padding:1%;
+            font-size:20px;
+            text-transform:uppercase;
+            border:solid 1px #dcbebe;
+            display: table;
+        }
+        .imgnyamenang{
+            width: 100%;
+            height: 200px;
+            margin-left:0.5%;
+            border-radius:100%;
+            display:block;
+            
+        }
+        .nama_user{
+            width:100%;
+            padding:1%;
+            font-size:12px;
+            border:solid 1px #dcbebe;
+            font-weight:bold;
+            height:70px;
+            
+            font-size:13px;
+        }
+    }
+    @media only screen and (max-width: 640px) {
+        .colommenang{
+            width:54%;
+            text-align:center;
+            padding:1%;
+            margin-left:23%;
+            margin-top:10%;
+            margin-bottom:2%;
+            /* border:double 3px #000; */
+            display: table;
+        }
+        .judulmenang{
+            width:100%;
+            float:left;
+            text-align:left;
+            background:#e2f791;
+            padding:1%;
+            font-size:15px;
+            text-transform:uppercase;
+            border:solid 1px #dcbebe;
+            display: table;
+        }
+        .imgnyamenang{
+            width: 100%;
+            height: 200px;
+            margin-left:0.5%;
+            border-radius:100%;
+            display:block;
+            
+        }
+        .nama_user{
+            width:100%;
+            padding:1%;
+            font-size:12px;
+            border:solid 1px #dcbebe;
+            font-weight:bold;
+            height:70px;
+            
+            font-size:13px;
+        }
+    }
+    </style>
 </head>
     <body>
 
         <div class="box box-success">
             <div class="box-header with-border">
               <h3 class="box-title">Quickcount</h3>
-              <!-- <span class="btn btn-success btn-sm" onclick="printDiv('diprint')"><i class="fa fa-print"></i> Cetak</span> -->
-              
+              @if(Auth::user()['role_id']==3)
+                @if(stspemilihan($pemilihan['id'],cek_kode_group())==1)
+                    <span class="btn btn-success btn-sm" style="margin-left:2%" onclick="akhiri({{$pemilihan['id']}},'{{cek_kode_group()}}')"><i class="fa fa-remove"></i> Tutup Vote</span>
+                @endif
+              @endif
             </div>
             <div class="box-body" id="diprint">
                 <div class="col-md-8">
@@ -79,6 +166,32 @@
                         </tbody>
                     </table>
                 </div>
+                @if(stspemilihan($pemilihan['id'],$group['kode_group'])==2)
+                <div class="col-md-12" style="background-image: linear-gradient(to right top, #567cbb, #4d65a1, #444e87, #3a396e, #2f2455);color:#fff">
+                    <div class="judulmenang" style="color:blue">
+                            <marquee>
+                                @foreach($hasilnya as $hsl)
+                                    SELAMAT ATAS TERPILIHNYA [{{$hsl['nik']}}]{{$hsl['pengguna']['name']}} DALAM PEMILIHAN {{$pemilihan['name']}} PADA RUTU {{$group['name']}}
+                                @endforeach
+                            </marquee>
+                        </div>
+                            @foreach($hasilnya2 as $hsl)
+                                
+                                <div class="colommenang">
+                                    <div class="img_user_menang" >
+                                        <img src="{{url('pengguna/enkripsi?text='.enkripsi_akuh($hsl['nik']))}}"  class="imgnyamenang" alt="User Image">
+                                    </div>
+                                    <div class="nama_user" >
+                                        {{$hsl['nik']}}<br>
+                                        {{$hsl['pengguna']['name']}}
+                                        <br>Suara <b>( {{$hsl['total']}} )</b>
+                                    </div>
+                                    
+                                </div>
+
+                            @endforeach    
+                </div>
+                @endif
             </div>
             <!-- /.box-body -->
           </div>
@@ -102,6 +215,22 @@
 
                 document.body.innerHTML = originalContents;
 
+            }
+
+            function akhiri(id,group){
+                if (confirm('Apakah yakin akan menutup vote?')) {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{url('quickcount/akhiri')}}",
+                        data: "pemilihan_id="+id+"&kode_group="+group,
+                        success: function(msg){
+                                location.reload();
+                            
+                        }
+                    });
+                }else{
+                    alert('ok');
+                }
             }
 	    </script>
         <script>

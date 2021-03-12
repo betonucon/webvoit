@@ -13,13 +13,22 @@ class GroupController extends Controller
 {
     public function index(request $request){
         $menu='Group';
-
-        return view('group.index',compact('menu'));
+        if(Auth::user()['role_id']==1){
+            return view('group.index',compact('menu'));
+        }else{
+            return view('404',compact('menu'));
+        }
+        
     }
     public function pengguna(request $request){
         $menu='Pengguna Group';
         $kode_group=$request->kode_group;
-        return view('group.pengguna',compact('menu','kode_group'));
+        if(Auth::user()['role_id']==1 || Auth::user()['role_id']==3){
+            return view('group.pengguna',compact('menu','kode_group'));
+        }else{
+            return view('404',compact('menu'));
+        }
+        
     }
     
     public function tampilkan_group(request $request){

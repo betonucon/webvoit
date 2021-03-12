@@ -43,6 +43,53 @@
         border:solid 1px #dcbebe;
         display: table;
       }
+      .colommenang{
+        width:30%;
+        text-align:center;
+        padding:1%;
+        margin-left:35%;
+        margin-top:10%;
+        margin-bottom:2%;
+        /* border:double 3px #000; */
+        display: table;
+      }
+      .judulmenang{
+        width:100%;
+        float:left;
+        text-align:left;
+        background:#e2f791;
+        padding:1%;
+        font-size:20px;
+        border:solid 1px #dcbebe;
+        display: table;
+      }
+      .colommenang-100{
+        width:100%;
+        float:left;
+        text-align:left;
+        background-image: linear-gradient(to right top, #dee4ee, #9cecff, #00f6f3, #2cf8a2, #a8eb12);
+        border:solid 1px #dcbebe;
+        display: table;
+      }
+      .colom-100{
+        width:100%;
+        float:left;
+        text-align:left;
+        background:#fff;
+        border:solid 1px #dcbebe;
+        display: table;
+      }
+      
+      .colom-20{
+        width:25%;
+        float:left;
+        text-align:center;
+        margin:1%;
+        padding:1%;
+        background:#fff;
+        border:solid 1px #dcbebe;
+        display: table;
+      }
       #select2{
         border-radius:0px;
       }
@@ -89,11 +136,26 @@
         display:block;
         
       }
+      .imgnyamenang{
+        width: 100%;
+        height: 200px;
+        margin-left:0.5%;
+        border-radius:100%;
+        display:block;
+        
+      }
       .img_user{
         width:100%;
         height:150px;
         display: initial;
         position: relative;
+        /* border:solid 1px #dcbebe; */
+      }
+      .img_user_menang{
+        width:100%;
+        display: initial;
+        position: relative;
+        border-radius:100%;
         /* border:solid 1px #dcbebe; */
       }
       .nomor_user{
@@ -139,6 +201,42 @@
       #section{
         padding:20px 0px 0px 0px ;
       }
+      .judulmenang{
+        width:100%;
+        float:left;
+        text-align:left;
+        background:#e2f791;
+        padding:1%;
+        font-size:15px;
+        border:solid 1px #dcbebe;
+        display: table;
+      }
+      .colommenang-100{
+        width:100%;
+        float:left;
+        text-align:left;
+        background-image: linear-gradient(to right top, #dee4ee, #9cecff, #00f6f3, #2cf8a2, #a8eb12);
+        border:solid 1px #dcbebe;
+        display: table;
+      }
+      .colommenang{
+        width:30%;
+        text-align:center;
+        padding:1%;
+        margin-left:35%;
+        margin-top:10%;
+        margin-bottom:2%;
+        /* border:double 3px #000; */
+        display: table;
+      }
+      .colom-100{
+        width:100%;
+        float:left;
+        text-align:left;
+        background:#fff;
+        border:solid 1px #dcbebe;
+        display: table;
+      }
       .colom-25{
         width:31%;
         float:left;
@@ -164,6 +262,14 @@
         height:100px;
         display: flex;
         border:solid 1px #dcbebe;
+      }
+      .imgnyamenang{
+        width: 100%;
+        height: 150px;
+        margin-left:0.5%;
+        border-radius:100%;
+        display:block;
+        
       }
       .nomor_user{
         width:100%;

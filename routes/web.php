@@ -94,6 +94,7 @@ Route::group(['middleware'    => 'auth'],function(){
 Route::group(['middleware'    => 'auth'],function(){
     Route::get('/quickcount', 'QuickcountController@index');
     Route::get('/quickcount/grafik', 'QuickcountController@grafik');
+    Route::get('/quickcount/akhiri', 'QuickcountController@akhiri');
     Route::get('/quickcount/view_data', 'QuickcountController@view_data');
     Route::get('/quickcount/hapus', 'QuickcountController@hapus');
     Route::get('/quickcount/view_data_hasil', 'QuickcountController@view_data_hasil');

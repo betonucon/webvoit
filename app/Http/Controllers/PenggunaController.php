@@ -22,8 +22,12 @@ class PenggunaController extends Controller
 	}
     public function index(request $request){
         $menu='Pengguna';
-
-        return view('pengguna.index',compact('menu'));
+        if(Auth::user()['role_id']==1){
+            return view('pengguna.index',compact('menu'));
+        }else{
+            return view('404',compact('menu'));
+        }
+        
     }
     
     public function index_unit(request $request){
@@ -88,7 +92,7 @@ class PenggunaController extends Controller
         if($cek>0){
             $data=Pengguna::with(['detailgroup'])->where('nik','LIKE','%'.$request->text.'%')->orWhere('name','LIKE','%'.$request->text.'%')->orderBy('name','Asc')->get();
         }else{
-            $data=Pengguna::with(['detailgroup'])->orderBy('name','Asc')->get();
+            $data=Pengguna::with(['detailgroup'])->orderBy('name','Asc')->paginate(100);
         }
         echo'
             <style>

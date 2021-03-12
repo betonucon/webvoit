@@ -9,8 +9,6 @@ use App\Pemilihan;
 use App\Voters;
 use App\User;
 use App\Unit;
-use DB; 
-use App\Quickcount;
 use App\Statuspemilihan;
 
 use App\Detailpemilihan;
@@ -18,19 +16,14 @@ class PemilihanController extends Controller
 {
     public function index(request $request){
         $menu='Pemilihan';
-        if(Auth::user()['role_id']==1){
-            return view('pemilihan.index',compact('menu'));
-        }else{
-            return view('404',compact('menu'));
-        }
-        
-        
+
+        return view('pemilihan.index',compact('menu'));
     }
     public function index_unit(request $request){
         $menu='Pemilihan';
         
         if(Auth::user()['role_id']==3){
-            // return view('pemilihan.index_unit',compact('menu'));
+            return view('pemilihan.index_unit',compact('menu'));
         }else{
 
         }
@@ -61,7 +54,6 @@ class PemilihanController extends Controller
 
     public function sisa_waktu(request $request){
         echo sisa_waktu().'@Jam Server : '.date('d-m-Y H:i:s');
-        
 
     }
     public function hidupkan(request $request){
@@ -96,96 +88,108 @@ class PemilihanController extends Controller
                 $data=Detailpemilihan::with(['pemilihan'])->where('pemilihan_id',$cek['id'])->get();
             }
             if(date('Y-m-d H:i:s')>$cek['sampai']){
-                // $hs=Quickcount::select('nik')->groupBy('nik')->get();
-                $hs=Quickcount::with(['pengguna'])->select('nik', DB::raw('count(*) as total'))
-                    ->where('pemilihan_id',$cek['id'])
-                    ->where('kode_group',cek_kode_group())
-                    ->groupBy('nik')
-                    ->orderBy('total','Desc')
-                    ->paginate(1);
-                echo'
-                        <div class="colom-100" id="tampilkanhasil">
-                            
-                        </div>
-                        ';
-            }else{
-                if(stspemilihan($cek['id'],cek_kode_group())==1){
-                    foreach($data as $no=>$det){
-                        if($det['nik']==999999){
-                            echo'
-                                <div class="colom-25">
-                                    <div class="nomor_user">
-                                        &nbsp;
-                                    </div>
-                                    <div class="img_user">
-                                        <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
-                                    </div>
-                                    <div class="nama_user">
-                                        ABSTAIN<br>
-                                        &nbsp;
-                                    </div>';
-                                    if($det->pemilihan['mulai']==1){
-                                        if(cek_pemilihan($cek['id'])>0){
-
-                                        }else{
-                                            echo'
-                                            <div class="nama_user_no">
-                                                <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
-                                            </div>';
-                                        }
-                                            
-                                    }else{
-                                        
-                                    }
-                                    echo'
+                foreach($data as $no=>$det){
+                    if($det['nik']==999999){
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                &nbsp;
                                 </div>
-                            ';
-                        }else{
-                            echo'
-                                <div class="colom-25">
-                                    <div class="nomor_user">
-                                    NO '.$det['nomor'].' 
-                                    </div>
-                                    <div class="img_user">
-                                        <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
-                                    </div>
-                                    <div class="nama_user">
+                                <div class="img_user">
+                                    <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                    ABSTAIN<br>
+                                    &nbsp;
+                                </div>
+                                <div class="nama_user_no">
+                                    
+                                    '.cek_hasil($det['nik'],$det['pemilihan_id'],$det['kode_group']).'
+                                </div>
+                            </div>
+                        ';
+                    }else{
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.$det['nomor'].'  
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
                                     '.cek_pengguna($det['nik'])['name'].'<br>
                                     '.$det['nik'].'
-                                    </div>';
-                                    if($det->pemilihan['mulai']==1){
-                                        if(cek_pemilihan($cek['id'])>0){
-
-                                        }else{
-                                            echo'
-                                            <div class="nama_user_no">
-                                                <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
-                                            </div>';
-                                        }
-                                            
-                                    }else{
-                                        
-                                    }
-                                    echo'
                                 </div>
-                            ';
-                        }
+                                <div class="nama_user_no">
+                                    
+                                    '.cek_hasil($det['nik'],$det['pemilihan_id'],$det['kode_group']).'
+                                </div>
+                            </div>
+                        ';
                     }
-                }else{
-                    
-                    $hs=Quickcount::with(['pengguna'])->select('nik', DB::raw('count(*) as total'))
-                    ->where('pemilihan_id',$cek['id'])
-                    ->where('kode_group',cek_kode_group())
-                    ->groupBy('nik')
-                    ->orderBy('total','Desc')
-                    ->paginate(1);
-                    echo'
-                        <div class="colom-100" id="tampilkanhasil">
-                            
-                        </div>
-                        
-                    ';
-                            
+                }
+            }else{
+                foreach($data as $no=>$det){
+                    if($det['nik']==999999){
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                &nbsp;
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('img/pilih.png').'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                    ABSTAIN<br>
+                                    &nbsp;
+                                </div>';
+                                if($det->pemilihan['mulai']==1){
+                                    if(cek_pemilihan($cek['id'])>0){
+
+                                    }else{
+                                        echo'
+                                        <div class="nama_user_no">
+                                            <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
+                                        </div>';
+                                    }
+                                        
+                                }else{
+                                    
+                                }
+                                echo'
+                            </div>
+                        ';
+                    }else{
+                        echo'
+                            <div class="colom-25">
+                                <div class="nomor_user">
+                                NO '.$det['nomor'].' 
+                                </div>
+                                <div class="img_user">
+                                    <img src="'.url('pengguna/enkripsi?text='.enkripsi_akuh($det['nik'])).'"  class="imgnya" alt="User Image">
+                                </div>
+                                <div class="nama_user">
+                                '.cek_pengguna($det['nik'])['name'].'<br>
+                                '.$det['nik'].'
+                                </div>';
+                                if($det->pemilihan['mulai']==1){
+                                    if(cek_pemilihan($cek['id'])>0){
+
+                                    }else{
+                                        echo'
+                                        <div class="nama_user_no">
+                                            <span class="btn btn-primary btn-sm" onclick="pilih('.$det['id'].')">Pilih</span>
+                                        </div>';
+                                    }
+                                        
+                                }else{
+                                    
+                                }
+                                echo'
+                            </div>
+                        ';
+                    }
                 }
             }
         }else{
@@ -263,23 +267,6 @@ class PemilihanController extends Controller
                 echo'<center> <img src="'.url('img/no_akses.png').'" style="width:20%"></center>';
             }
         }
-
-        echo"
-        <script>
-            $(document).ready(function() {
-                $.ajax({
-                    type: 'GET',
-                    url: '".url('quickcount/grafik?pemilihan_id='.$cek['id'].'&kode_group='.cek_kode_group())."',
-                    data: 'idd=1',
-                    success: function(msg){
-                            $('#tampilkanhasil').html(msg);
-                            $('#tampilkanhasil2').html(msg);
-                        
-                    }
-                });
-            });
-        </script>
-        ";
     }
     public function view_data_vote_admin(request $request){
         error_reporting(0);
@@ -701,20 +688,8 @@ class PemilihanController extends Controller
                 $data->save();
 
                 if($data){
-                    $cekdet=Detailpemilihan::where('nik',999999)->count();
+                    $cekdet=Detailpemilihan::where('pemilihan_id',$request->pemilihan_id)->where('nik',999999)->count();
                     if($cekdet>0){
-                        foreach(group() as $gr){
-                            $cekgr=Statuspemilihan::where('pemilihan_id',$data['id'])->where('kode_group',$gr['kode_group'])->count();
-                            if($cekgr>0){
-
-                            }else{
-                                $stspemilihan                   = New Statuspemilihan;
-                                $stspemilihan->pemilihan_id     = $data['id'];
-                                $stspemilihan->kode_group       = $gr['kode_group'];
-                                $stspemilihan->sts              = 1;
-                                $stspemilihan->save();
-                            }
-                        }
                         echo'ok';
                     }else{
                         $pass                   = New Detailpemilihan;

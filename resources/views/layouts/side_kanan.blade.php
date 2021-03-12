@@ -1,7 +1,7 @@
       <ul class="sidebar-menu" data-widget="tree">
       @if(Auth::user()['role_id']==1)
         <li class="header">MAIN NAVIGATION</li>
-        <li><a href="{{url('evote')}}" target="_blank"><i class="fa fa-folder"></i> <span>E-vote</span></a></li>
+        <!-- <li><a href="{{url('evote')}}" target="_blank"><i class="fa fa-folder"></i> <span>E-vote</span></a></li> -->
         
         <li class="treeview">
           <a href="#">
