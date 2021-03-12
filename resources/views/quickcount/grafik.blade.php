@@ -108,6 +108,9 @@
                 @if(stspemilihan($pemilihan['id'],cek_kode_group())==1)
                     <span class="btn btn-success btn-sm" style="margin-left:2%" onclick="akhiri({{$pemilihan['id']}},'{{cek_kode_group()}}')"><i class="fa fa-remove"></i> Tutup Vote</span>
                 @endif
+                @if(stspemilihan($pemilihan['id'],cek_kode_group())==2)
+                    <span class="btn btn-success btn-sm" style="margin-left:2%" onclick="akhiri({{$pemilihan['id']}},'{{cek_kode_group()}}')"><i class="fa fa-remove"></i> Buka Vote</span>
+                @endif
               @endif
             </div>
             <div class="box-body" id="diprint">

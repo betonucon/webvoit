@@ -150,7 +150,7 @@ class PenggunaController extends Controller
             <table width="100%" class="table table-bordered table-hover dataTable">
                 <tr>
                     <th width="5%">No</th>
-                    <th width="10%">NIKdd</th>
+                    <th width="10%">NIK</th>
                     <th>Nama</th>
                     <th>Area Kerja</th>
                     <th>Unit SKKS</th>
