@@ -52,7 +52,7 @@ class LoginController extends Controller
         }else{
             Auth::loginUsingId($userlogin->id);
             return redirect()
-            ->route('/home');
+            ->route('home');
         }
         
         } catch (ModelNotFoundException $e) {
