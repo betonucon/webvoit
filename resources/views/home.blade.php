@@ -22,8 +22,8 @@
               <span aria-hidden="true">×</span></button>
             <h4 class="modal-title">Perhatian</h4>
           </div>
-          <div class="modal-body">
-            <p>Apakah anda yakin akan melakukan vote?</p>
+          <div class="modal-body" style="text-align:center">
+            <p>Apakah Anda Sudah Yakin Dengan Pilihan Anda?</p>
             <form method="post" id="mydata" enctype="multipart/form-data">
                @csrf
               <input type="hidden" name="id" id="pemilihan_id">

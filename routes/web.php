@@ -14,7 +14,7 @@
 Route::get('login', function () {
     return redirect('http://sso.krakatausteel.com/');
 });
-Route::get('login_skks/', function () {
+Route::get('login_skks/'.date('Ymd'), function () {
     return view('auth.login');
 });
 
