@@ -176,7 +176,7 @@ class PenggunaController extends Controller
                     }else{
                         echo'
                         <td>
-                            <span class="btn btn-danger btn-xs" onclick="hapus('.$o['detailgroup']['id'].')"><i class="fa fa-remove"></i></span>
+                            <span class="btn btn-danger btn-xs" onclick="hapus('.$o['id'].')"><i class="fa fa-remove"></i></span>
                         </td>
                         ';
                     }
