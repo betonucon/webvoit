@@ -110,7 +110,7 @@ class QuickcountController extends Controller
                             }
                             
                             if($data['kat']==1){
-                                $group=Detailgroup::with(['pengguna'])->where('kode_group',$request->kode_group)->get();
+                                $group=Detailgroup::with(['pengguna'])->where('kode_group',$request->kode_group)->orderBy('nik','Asc')->get();
                                 $no=0;
                                 foreach($group as $no=>$gr){
                                     
@@ -154,7 +154,7 @@ class QuickcountController extends Controller
                                     }
                                 }
                                 if(Auth::user()['role_id']==3){
-                                    $sudah=Quickcount::with(['pengguna','penggunaan'])->where('pemilihan_id',$request['pemilihan_id'])->where('kode_group',cek_kode_group())->get();
+                                    $sudah=Quickcount::with(['pengguna','penggunaan'])->where('pemilihan_id',$request['pemilihan_id'])->where('kode_group',cek_kode_group())->orderBy('username','Asc')->get();
                                 }
                                 
                                 foreach($sudah as $no=>$sud){
